@@ -40,13 +40,8 @@ export default function SignupModal({ isOpen, onClose }: SignupModalProps) {
 
   const signupMutation = useMutation({
     mutationFn: async (data: SignupFormData) => {
-      return await apiRequest('/api/auth/register', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await apiRequest('POST', '/api/auth/register', data);
+      return response.json();
     },
     onSuccess: () => {
       toast({
