@@ -1,0 +1,106 @@
+Build a full-stack responsive service portal for a digital transformation company called OrangeMantra (OM) — similar to UrbanClap, but for IT and enterprise services. The portal should allow users to explore services by category, view detailed service pages, and submit quote/contact forms that act as leads for the sales team.
+
+🧩 Functional Requirements:
+🔹 Homepage
+Hero banner with OrangeMantra branding
+
+Search bar (placeholder)
+
+Display all service categories as clickable tiles or icons
+
+🔹 Category Page
+List all services under the selected category in a card layout
+
+Each service card includes:
+
+Title
+
+Brief Description
+
+Pricing:
+
+₹1250/hour or ₹2,00,000/month
+
+Button: “View Details”
+
+🔹 Service Detail Page (for each service)
+Title, long description, key features, technologies used
+
+Pricing information
+
+“Contact Our Sales Team” section with a form:
+
+Name
+
+Email
+
+Phone
+
+Message
+
+Pre-filled with the selected service
+
+On form submission, save/store lead in memory or mock DB (simulate CRM lead capture)
+
+Show success message (no real email required)
+
+🔹 (Optional) Admin Dashboard
+View all leads generated via service forms
+
+⚙️ Tech Stack
+Frontend: React.js + Tailwind CSS
+
+Backend: Node.js + Express
+
+APIs:
+
+/api/categories → Get all service categories
+
+/api/services?category=xyz → List services under a category
+
+/api/service/:id → Get service details
+
+/api/leads → POST endpoint to capture contact form submissions
+
+Use mock data (no database for now)
+
+📁 Service Categories & Services (for mock data):
+Include 12 categories and about 20–30 services total, such as:
+
+Design & Creative → UI/UX Design, Wireframing, Mobile UI
+
+Web Development → Frontend, Backend, CMS, PWA
+
+Mobile App Dev → Android, iOS, React Native
+
+E-commerce → Shopify, Magento, Custom Store
+
+DevOps → CI/CD, Cloud Migration, Terraform
+
+Consulting → Digital Strategy, Agile Coaching
+
+CRM/ERP → Salesforce, Odoo, SAP, Zoho
+
+AI & Automation → Chatbots, RPA, AI Integration
+
+SEO/Marketing → SEO Audit, Google Ads, Analytics Setup
+
+Modernization → Legacy to Microservices, Docker
+
+QA → Automation, Performance, Security
+
+Support → Bug Fixing, SLA Support, Hosting
+
+🎨 UI Design
+Mobile-first
+
+Card layout for services
+
+Clean, modern layout with filters
+
+Sticky navigation + footer
+
+Form validations
+
+🎯 Business Goal:
+This portal should become a lead generation engine where clients can explore offerings, view detailed service information, and contact the sales team directly for pricing, demos, or partnerships.
