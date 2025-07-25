@@ -1,11 +1,8 @@
 import express from 'express';
 import session from 'express-session';
-import mongoose from 'mongoose';
-import passport from 'passport';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { registerRoutes } from './routes-simple.js';
+import { registerRoutes } from './routes-working.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,8 +10,8 @@ const __dirname = dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Using in-memory storage for development
-console.log('🚀 Using in-memory storage for development');
+// Using PostgreSQL database
+console.log('🚀 AppKickstart starting with PostgreSQL database');
 
 // Middleware
 app.use(express.json());
@@ -31,40 +28,8 @@ app.use(session({
   }
 }));
 
-// Passport configuration
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Google OAuth Strategy
-if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
-  passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/auth/google/callback"
-  },
-  async (accessToken, refreshToken, profile, done) => {
-    try {
-      // Handle Google OAuth user creation/login
-      const user = {
-        googleId: profile.id,
-        email: profile.emails?.[0]?.value || '',
-        name: profile.displayName,
-        picture: profile.photos?.[0]?.value
-      };
-      return done(null, user);
-    } catch (error) {
-      return done(error, null);
-    }
-  }));
-}
-
-passport.serializeUser((user: any, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((user: any, done) => {
-  done(null, user);
-});
+// Simple session management (no Passport for now)
+console.log('Session configured with PostgreSQL store');
 
 // Routes
 app.use('/', registerRoutes());

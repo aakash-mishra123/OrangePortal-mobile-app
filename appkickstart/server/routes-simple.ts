@@ -86,22 +86,30 @@ router.get('/api/search', async (req, res) => {
 // Submit lead
 router.post('/api/leads', async (req, res) => {
   try {
-    const validatedData = leadSchema.parse(req.body);
+    console.log('Received lead data:', req.body);
     
+    // Validate the request body
+    const validatedData = leadSchema.parse(req.body);
+    console.log('Validated data:', validatedData);
+    
+    // Create the lead using storage
     const lead = await storage.createLead(validatedData);
+    console.log('Created lead:', lead);
     
     res.status(201).json({ 
       message: 'Lead submitted successfully! Our manager will call you within 5 minutes.',
       leadId: lead.id
     });
   } catch (error: any) {
+    console.error('Lead submission error details:', error);
+    
     if (error.name === 'ZodError') {
+      console.log('Zod validation errors:', error.errors);
       res.status(400).json({ 
         message: 'Validation failed',
         errors: error.errors
       });
     } else {
-      console.error('Lead submission error:', error);
       res.status(500).json({ message: 'Failed to create lead' });
     }
   }

@@ -1,118 +1,98 @@
-// In-memory storage for development and testing
-interface ILead {
-  id: string;
-  name: string;
-  phone: string;
-  email: string;
-  projectBrief: string;
-  budget: string;
-  serviceId: string;
-  serviceName: string;
-  status: 'new' | 'contacted' | 'in-progress' | 'completed' | 'cancelled';
-  createdAt: Date;
+// PostgreSQL database storage
+import { db } from './db.js';
+import { leads, users, activities, type InsertLead, type Lead, type User, type InsertUser } from '../shared/schema.js';
+import { eq, desc, count } from 'drizzle-orm';
+
+export interface IStorage {
+  // Lead operations
+  createLead(leadData: InsertLead): Promise<Lead>;
+  getLeads(status?: string): Promise<Lead[]>;
+  updateLeadStatus(id: string, status: 'new' | 'contacted' | 'in-progress' | 'completed' | 'cancelled'): Promise<Lead | null>;
+  
+  // User operations
+  createUser(userData: InsertUser): Promise<User>;
+  getUserByEmail(email: string): Promise<User | null>;
+  upsertUser(userData: InsertUser): Promise<User>;
+  
+  // Analytics
+  getAnalytics(): Promise<any>;
+  incrementServiceViews(serviceId: string, serviceName: string): Promise<void>;
 }
 
-interface IUser {
-  id: string;
-  name: string;
-  email: string;
-  role?: string;
-}
-
-class MemoryStorage {
-  private leads: Map<string, ILead> = new Map();
-  private users: Map<string, IUser> = new Map();
-  private analytics: Map<string, { views: number; leads: number; serviceName: string }> = new Map();
+class DatabaseStorage implements IStorage {
 
   // Lead operations
-  async createLead(leadData: Omit<ILead, 'id' | 'createdAt' | 'status'>): Promise<ILead> {
-    const id = `lead_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const lead: ILead = {
+  async createLead(leadData: InsertLead): Promise<Lead> {
+    const [lead] = await db.insert(leads).values({
       ...leadData,
-      id,
-      status: 'new',
-      createdAt: new Date()
-    };
-    
-    this.leads.set(id, lead);
-    
-    // Update analytics
-    const serviceAnalytics = this.analytics.get(leadData.serviceId) || {
-      views: 0,
-      leads: 0,
-      serviceName: leadData.serviceName
-    };
-    serviceAnalytics.leads += 1;
-    this.analytics.set(leadData.serviceId, serviceAnalytics);
-    
+      status: 'new'
+    }).returning();
     return lead;
   }
 
-  async getLeads(status?: string): Promise<ILead[]> {
-    const allLeads = Array.from(this.leads.values());
+  async getLeads(status?: string): Promise<Lead[]> {
     if (!status || status === 'all') {
-      return allLeads.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      return await db.select().from(leads).orderBy(desc(leads.createdAt));
     }
-    return allLeads
-      .filter(lead => lead.status === status)
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    return await db.select().from(leads)
+      .where(eq(leads.status, status))
+      .orderBy(desc(leads.createdAt));
   }
 
-  async updateLeadStatus(id: string, status: ILead['status']): Promise<ILead | null> {
-    const lead = this.leads.get(id);
-    if (!lead) return null;
-    
-    lead.status = status;
-    this.leads.set(id, lead);
-    return lead;
-  }
-
-  async getAnalytics() {
-    const allLeads = Array.from(this.leads.values());
-    const totalLeads = allLeads.length;
-    const newLeads = allLeads.filter(l => l.status === 'new').length;
-    const inProgressLeads = allLeads.filter(l => l.status === 'in-progress').length;
-    const completedLeads = allLeads.filter(l => l.status === 'completed').length;
-
-    return {
-      totalLeads,
-      newLeads,
-      inProgressLeads,
-      completedLeads,
-      serviceAnalytics: Array.from(this.analytics.entries()).map(([serviceId, data]) => ({
-        serviceId,
-        ...data
-      }))
-    };
+  async updateLeadStatus(id: string, status: 'new' | 'contacted' | 'in-progress' | 'completed' | 'cancelled'): Promise<Lead | null> {
+    const [lead] = await db.update(leads)
+      .set({ status, updatedAt: new Date() })
+      .where(eq(leads.id, id))
+      .returning();
+    return lead || null;
   }
 
   // User operations
-  async createUser(userData: Omit<IUser, 'id'>): Promise<IUser> {
-    const id = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const user: IUser = { ...userData, id };
-    this.users.set(id, user);
+  async createUser(userData: InsertUser): Promise<User> {
+    const [user] = await db.insert(users).values(userData).returning();
     return user;
   }
 
-  async getUserByEmail(email: string): Promise<IUser | null> {
-    for (const user of this.users.values()) {
-      if (user.email === email) {
-        return user;
-      }
-    }
-    return null;
+  async getUserByEmail(email: string): Promise<User | null> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user || null;
   }
 
-  async incrementServiceViews(serviceId: string, serviceName: string) {
-    const analytics = this.analytics.get(serviceId) || {
-      views: 0,
-      leads: 0,
-      serviceName
+  async upsertUser(userData: InsertUser): Promise<User> {
+    const existingUser = await this.getUserByEmail(userData.email!);
+    if (existingUser) {
+      const [user] = await db.update(users)
+        .set({ ...userData, updatedAt: new Date() })
+        .where(eq(users.email, userData.email!))
+        .returning();
+      return user;
+    } else {
+      return await this.createUser(userData);
+    }
+  }
+
+  async getAnalytics() {
+    const totalLeads = await db.select({ count: count() }).from(leads);
+    const newLeads = await db.select({ count: count() }).from(leads).where(eq(leads.status, 'new'));
+    const inProgressLeads = await db.select({ count: count() }).from(leads).where(eq(leads.status, 'in-progress'));
+    const completedLeads = await db.select({ count: count() }).from(leads).where(eq(leads.status, 'completed'));
+
+    return {
+      totalLeads: totalLeads[0]?.count || 0,
+      newLeads: newLeads[0]?.count || 0,
+      inProgressLeads: inProgressLeads[0]?.count || 0,
+      completedLeads: completedLeads[0]?.count || 0
     };
-    analytics.views += 1;
-    this.analytics.set(serviceId, analytics);
+  }
+
+  async incrementServiceViews(serviceId: string, serviceName: string): Promise<void> {
+    // Track service views in activities table
+    await db.insert(activities).values({
+      userId: 'system',
+      activityType: 'service_view',
+      details: { serviceId, serviceName }
+    });
   }
 }
 
-export const storage = new MemoryStorage();
-export type { ILead, IUser };
+export const storage = new DatabaseStorage();

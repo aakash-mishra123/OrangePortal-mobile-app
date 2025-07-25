@@ -1,4 +1,7 @@
 import { z } from 'zod';
+import { pgTable, text, timestamp, uuid, integer, jsonb, index, varchar } from 'drizzle-orm/pg-core';
+import { createInsertSchema } from 'drizzle-zod';
+import { sql } from 'drizzle-orm';
 
 // Service Categories Schema
 export const serviceCategories = [
@@ -110,13 +113,14 @@ export const leadSchema = z.object({
   serviceName: z.string()
 });
 
-export type Lead = z.infer<typeof leadSchema> & {
+// Legacy Lead types (kept for compatibility)
+export type LegacyLead = z.infer<typeof leadSchema> & {
   _id?: string;
   createdAt?: Date;
   status?: 'new' | 'contacted' | 'in-progress' | 'completed' | 'cancelled';
 };
 
-export type InsertLead = z.infer<typeof leadSchema>;
+export type LegacyInsertLead = z.infer<typeof leadSchema>;
 
 // Admin Schema
 export const adminSchema = z.object({
@@ -130,19 +134,6 @@ export type Admin = z.infer<typeof adminSchema> & {
   createdAt?: Date;
 };
 
-// Google OAuth User Schema
-export const googleUserSchema = z.object({
-  googleId: z.string(),
-  email: z.string().email(),
-  name: z.string(),
-  picture: z.string().optional()
-});
-
-export type GoogleUser = z.infer<typeof googleUserSchema> & {
-  _id?: string;
-  createdAt?: Date;
-};
-
 // Budget Options
 export const budgetOptions = [
   '₹25,000 - ₹50,000',
@@ -151,3 +142,65 @@ export const budgetOptions = [
   '₹2,50,000 - ₹5,00,000',
   '₹5,00,000+'
 ] as const;
+
+// Database Tables
+
+// Session storage table (required for authentication)
+export const sessions = pgTable(
+  "sessions",
+  {
+    sid: varchar("sid").primaryKey(),
+    sess: jsonb("sess").notNull(),
+    expire: timestamp("expire").notNull(),
+  },
+  (table) => [index("IDX_session_expire").on(table.expire)],
+);
+
+// Users table
+export const users = pgTable("users", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: varchar("email").unique(),
+  mobile: varchar("mobile"),
+  firstName: varchar("first_name"),
+  lastName: varchar("last_name"),
+  profileImageUrl: varchar("profile_image_url"),
+  isGuest: integer("is_guest").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Leads table
+export const leads = pgTable("leads", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: varchar("name").notNull(),
+  email: varchar("email").notNull(),
+  phone: varchar("phone").notNull(),
+  projectBrief: text("project_brief").notNull(),
+  budget: varchar("budget").notNull(),
+  serviceId: varchar("service_id").notNull(),
+  serviceName: varchar("service_name").notNull(),
+  status: varchar("status").default('new'),
+  userId: varchar("user_id"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Activities table (for tracking user activities)
+export const activities = pgTable("activities", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull(),
+  activityType: varchar("activity_type").notNull(),
+  details: jsonb("details"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Types
+export type User = typeof users.$inferSelect;
+export type InsertUser = typeof users.$inferInsert;
+export type UpsertUser = typeof users.$inferInsert;
+
+export type Lead = typeof leads.$inferSelect;
+export type InsertLead = typeof leads.$inferInsert;
+
+export type Activity = typeof activities.$inferSelect;
+export type InsertActivity = typeof activities.$inferInsert;
