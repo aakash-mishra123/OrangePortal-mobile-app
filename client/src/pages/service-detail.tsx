@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRoute } from "wouter";
+import { useEffect } from "react";
 import { type Service } from "@shared/schema";
 import { Link } from "wouter";
 import { ChevronRight, Home, Check } from "lucide-react";
 import ContactForm from "@/components/ui/contact-form";
 import { Badge } from "@/components/ui/badge";
+import { trackUserActivity } from "@/lib/activityTracker";
 
 export default function ServiceDetail() {
   const [, params] = useRoute("/service/:slug");
@@ -20,6 +22,21 @@ export default function ServiceDetail() {
       return response.json();
     }
   });
+
+  // Track service view activity
+  useEffect(() => {
+    if (service) {
+      trackUserActivity({
+        activityType: 'service_view',
+        serviceId: service.id,
+        metadata: {
+          serviceTitle: service.title,
+          categoryId: service.categoryId,
+          viewedAt: new Date().toISOString()
+        }
+      });
+    }
+  }, [service]);
 
   if (isLoading) {
     return (

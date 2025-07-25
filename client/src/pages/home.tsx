@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { useState } from "react";
 import { Link } from "wouter";
+import { trackUserActivity } from "@/lib/activityTracker";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -14,6 +15,14 @@ export default function Home() {
   const { data: categories, isLoading } = useQuery<Category[]>({
     queryKey: ["/api/categories"],
   });
+
+  const handleCategoryClick = async (categoryId: string) => {
+    await trackUserActivity({
+      activityType: 'category_browse',
+      categoryId: categoryId,
+      metadata: { source: 'home_page' }
+    });
+  };
 
   if (isLoading) {
     return (
@@ -122,7 +131,11 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {categories?.map((category) => (
-              <CategoryCard key={category.id} category={category} />
+              <CategoryCard 
+                key={category.id} 
+                category={category} 
+                onClick={() => handleCategoryClick(category.id)}
+              />
             ))}
           </div>
         </div>

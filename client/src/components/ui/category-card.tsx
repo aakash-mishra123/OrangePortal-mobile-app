@@ -3,6 +3,7 @@ import { Link } from "wouter";
 
 interface CategoryCardProps {
   category: Category;
+  onClick?: () => void;
 }
 
 const iconMap: Record<string, string> = {
@@ -35,13 +36,22 @@ const gradientMap: Record<string, string> = {
   "support": "from-amber-500 to-yellow-600",
 };
 
-export default function CategoryCard({ category }: CategoryCardProps) {
+export default function CategoryCard({ category, onClick }: CategoryCardProps) {
   const icon = iconMap[category.icon] || "🔧";
   const gradient = gradientMap[category.id] || "from-gray-500 to-gray-600";
 
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    }
+  };
+
   return (
     <Link href={`/category/${category.slug}`}>
-      <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer group border border-gray-100">
+      <div 
+        className="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer group border border-gray-100"
+        onClick={handleClick}
+      >
         <div className={`w-12 h-12 bg-gradient-to-br ${gradient} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
           <span className="text-white text-xl">{icon}</span>
         </div>
