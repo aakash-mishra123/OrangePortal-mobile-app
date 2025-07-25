@@ -84,7 +84,8 @@ if (process.env.NODE_ENV === 'production') {
   const { createServer } = await import('vite');
   const vite = await createServer({
     server: { middlewareMode: true },
-    appType: 'spa'
+    appType: 'spa',
+    root: 'client'
   });
   
   app.use(vite.ssrFixStacktrace);

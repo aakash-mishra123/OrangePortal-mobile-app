@@ -3,6 +3,7 @@ import { Router, Route, Switch } from 'wouter';
 import { Toaster } from '@/components/ui/toaster';
 import HomePage from '@/pages/HomePage';
 import CategoryPage from '@/pages/CategoryPage';
+import AuthPage from '@/pages/AuthPage';
 import AdminLogin from '@/pages/AdminLogin';
 import AdminDashboard from '@/pages/AdminDashboard';
 import NotFound from '@/pages/NotFound';
@@ -24,7 +25,8 @@ function App() {
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
           <Router>
             <Switch>
-              <Route path="/" component={HomePage} />
+              <Route path="/" component={AuthPage} />
+              <Route path="/home" component={HomePage} />
               <Route path="/category/:categoryId" component={CategoryPage} />
               <Route path="/admin/login" component={AdminLogin} />
               <Route path="/admin/dashboard" component={AdminDashboard} />

@@ -22,7 +22,7 @@ export default function Header() {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/">
+          <Link href="/home">
             <motion.div 
               className="flex items-center space-x-3 cursor-pointer"
               whileHover={{ scale: 1.05 }}
@@ -42,9 +42,9 @@ export default function Header() {
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/">
+            <Link href="/home">
               <a className={`font-medium transition-colors ${
-                location === '/' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600'
+                location === '/home' ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600'
               }`}>
                 Home
               </a>

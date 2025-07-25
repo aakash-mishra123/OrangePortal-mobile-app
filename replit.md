@@ -1,8 +1,8 @@
-# OrangeMantra Service Portal
+# AppKickstart - Mobile App Development Platform
 
 ## Overview
 
-This is a full-stack responsive service portal for OrangeMantra, a digital transformation company. The application is built similar to UrbanClap but focuses on IT and enterprise services. It allows users to browse service categories, view individual services, and submit lead generation forms for business inquiries.
+AppKickstart is a full-stack web application that helps users discover and request mobile app development services with the tagline "Kickstart Your App or Website in Just 1 Hour!" The platform focuses on speed, simplicity, and expert-led project kickoff for mobile app development services.
 
 ## User Preferences
 
@@ -23,46 +23,47 @@ Preferred communication style: Simple, everyday language.
 - **Runtime**: Node.js with Express.js framework
 - **Language**: TypeScript with ES modules
 - **API Design**: RESTful API endpoints
-- **Data Storage**: In-memory storage with interface for future database integration
-- **Schema Validation**: Zod for request/response validation
-- **Development**: Hot module replacement via Vite middleware
+- **Database**: MongoDB with Mongoose ODM
+- **Authentication**: Google OAuth for customers, Email/Password for admins
+- **Session Management**: Express sessions with secure configuration
 
 ### Database Design
-- **ORM**: Drizzle ORM configured for PostgreSQL
-- **Schema**: Three main entities - Categories, Services, and Leads
-- **Migration**: Drizzle Kit for schema migrations
-- **Current State**: In-memory storage implementation with database-ready schema
+- **Database**: MongoDB
+- **Models**: Leads, Admins, Google Users, Service Analytics
+- **Authentication**: Passport.js with Google OAuth strategy
+- **Admin Features**: Lead management, analytics dashboard, data export
 
 ## Key Components
 
 ### Core Entities
-- **Categories**: Service categories with icons, descriptions, and service counts
-- **Services**: Individual services with pricing, features, and detailed descriptions
-- **Leads**: Contact form submissions for CRM integration
+- **Service Categories**: 9 main categories including Mobile App Development (featured)
+- **Mobile App Services**: 6 sub-services (Android Native, iOS Native, Flutter, React Native, Backend API, App UI Design)
+- **Leads**: Project requests with automatic lead generation for authenticated users
+- **Users**: Google OAuth authentication and local email/phone signup
 
 ### Frontend Pages
-- **Home**: Hero section with category grid display, testimonials, and stats
-- **Category**: Service listings filtered by category
-- **Service Detail**: Comprehensive service information with contact form
-- **Search**: Advanced search with filters for category, price, and sorting
-- **Compare**: Side-by-side service comparison (up to 3 services)
-- **Admin Dashboard**: Lead management, analytics, and data export
-- **Consultation**: Multi-step booking form for free consultations
-- **Layout**: Consistent header and footer across all pages
+- **Auth Page** (Root /): Primary signup/login page with email and mobile number
+- **Home** (/home): Category grid with moving banner and search functionality
+- **Category Page**: Mobile app development services with simplified "Kickstart" buttons
+- **Admin Login**: Separate admin authentication portal
+- **Admin Dashboard**: Lead management, analytics, and user administration
 
 ### Backend Routes
 - `GET /api/categories` - Fetch all service categories
-- `GET /api/services` - Fetch all services or filter by category
-- `GET /api/service/:slug` - Fetch individual service details
-- `POST /api/leads` - Create new lead from contact form
-- `GET /api/leads` - Fetch all leads (admin access)
+- `GET /api/services/mobile-app` - Fetch mobile app development services
+- `GET /api/search` - Real-time search functionality
+- `POST /api/leads` - Create new lead (simplified for authenticated users)
+- `GET /auth/google` - Google OAuth authentication
+- `POST /auth/admin/login` - Admin login
+- `GET /api/admin/leads` - Admin lead management
+- `GET /api/admin/analytics` - Analytics dashboard
 
 ## Data Flow
 
-1. **Category Browsing**: User visits homepage → Frontend fetches categories → Displays category grid
-2. **Service Discovery**: User clicks category → Frontend fetches category services → Displays service cards
-3. **Service Inquiry**: User views service detail → Fills contact form → Backend creates lead → Success notification
-4. **Lead Management**: All leads stored in memory (ready for database/CRM integration)
+1. **User Authentication**: User visits root → Auth page with signup/login → Google OAuth or email signup
+2. **Service Discovery**: Authenticated user visits /home → Browses categories → Clicks mobile app development
+3. **Quick Kickstart**: User clicks "Kickstart Project" → If logged in: automatic lead creation → "Expert will call in 5 minutes"
+4. **Lead Management**: All leads stored in MongoDB with admin dashboard for management
 
 ## External Dependencies
 
@@ -75,8 +76,10 @@ Preferred communication style: Simple, everyday language.
 
 ### Backend Dependencies
 - **Framework**: Express.js for server framework
-- **Database**: Neon Database serverless PostgreSQL (configured but not active)
-- **ORM**: Drizzle ORM with PostgreSQL adapter
+- **Database**: MongoDB with Mongoose ODM
+- **Authentication**: Passport.js with Google OAuth strategy
+- **Session**: Express sessions with secure configuration
+- **Validation**: Zod for schema validation
 - **Development**: tsx for TypeScript execution, esbuild for production builds
 
 ### Shared Dependencies
@@ -100,15 +103,20 @@ Preferred communication style: Simple, everyday language.
 - **Development**: NODE_ENV determines build mode and middleware setup
 - **Replit Integration**: Special handling for Replit development environment
 
-### Database Migration
-- **Current**: PostgreSQL database fully configured and active
-- **Storage**: DatabaseStorage with user management and activity tracking
-- **Authentication**: Session-based auth with login/signup functionality
-- **Command**: `npm run db:push` for schema deployment
+### Database Configuration
+- **Current**: MongoDB with comprehensive models for leads, users, and analytics
+- **Authentication**: Google OAuth for customers, email/password for admins
+- **Lead Management**: Automatic lead creation for authenticated users
+- **Analytics**: Service tracking and lead analytics for admin dashboard
 
-## Mobile Application
-- **Platform**: React Native with Expo framework
-- **Features**: Complete mobile app with authentication, service browsing, search, and quote requests
-- **Navigation**: Bottom tabs with stack navigation for detailed views
-- **Backend Integration**: Full API integration with existing Express.js backend
-- **Location**: `mobile/` directory with comprehensive documentation
+## Recent Changes (January 25, 2025)
+- **Project Pivot**: Converted from OrangeMantra to AppKickstart focusing on mobile app development
+- **Simplified UX**: Removed complex forms, implemented one-click "Kickstart" for authenticated users
+- **Authentication First**: Root page now shows signup/login with email and mobile number
+- **Quick Lead Generation**: Authenticated users get instant "expert will call in 5 minutes" confirmation
+- **Admin Portal**: Separate admin login and dashboard for lead management
+
+## Legacy Mobile Application
+- **Status**: Maintained separately in `mobile/` directory
+- **Platform**: React Native with Expo framework (OrangeMantra mobile app)
+- **Integration**: Can be adapted for AppKickstart if needed

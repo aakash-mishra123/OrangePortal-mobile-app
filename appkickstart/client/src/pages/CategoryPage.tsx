@@ -2,26 +2,19 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'wouter';
-import { ArrowRight, Clock, CheckCircle, Star, X } from 'lucide-react';
+import { ArrowRight, Clock, CheckCircle, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { leadSchema, budgetOptions } from '../../shared/schema';
+import { leadSchema } from '../../shared/schema';
 import Header from '@/components/Header';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function CategoryPage() {
   const { categoryId } = useParams();
-  const [selectedService, setSelectedService] = useState(null);
-  const [showLeadForm, setShowLeadForm] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   const { data: services, isLoading } = useQuery({
     queryKey: ['services', categoryId],
@@ -51,12 +44,10 @@ export default function CategoryPage() {
     },
     onSuccess: (data) => {
       toast({
-        title: "Success! 🎉",
-        description: data.message,
-        duration: 5000,
+        title: "Project Kickstarted! 🎉",
+        description: "Our expert will call you within 5 minutes to discuss your project!",
+        duration: 8000,
       });
-      setShowLeadForm(false);
-      reset();
       queryClient.invalidateQueries({ queryKey: ['leads'] });
     },
     onError: (error: any) => {
@@ -68,28 +59,32 @@ export default function CategoryPage() {
     }
   });
 
-  const { register, handleSubmit, formState: { errors }, reset, setValue, watch } = useForm({
-    resolver: zodResolver(leadSchema),
-    defaultValues: {
-      name: '',
-      phone: '',
-      email: '',
-      projectBrief: '',
-      budget: '',
-      serviceId: '',
-      serviceName: ''
-    }
-  });
-
   const handleKickstartClick = (service: any) => {
-    setSelectedService(service);
-    setValue('serviceId', service.id);
-    setValue('serviceName', service.title);
-    setShowLeadForm(true);
-  };
+    if (!user) {
+      toast({
+        title: "Please Sign In",
+        description: "Sign up or log in to kickstart your project. Our expert will call you within 5 minutes!",
+        variant: "default",
+      });
+      // Redirect to login
+      setTimeout(() => {
+        window.location.href = '/auth/google';
+      }, 2000);
+      return;
+    }
 
-  const onSubmit = (data: any) => {
-    leadMutation.mutate(data);
+    // User is logged in, create lead automatically
+    const leadData = {
+      name: user.name,
+      phone: 'To be collected',
+      email: user.email,
+      projectBrief: `Interested in ${service.title} service`,
+      budget: 'To be discussed',
+      serviceId: service.id,
+      serviceName: service.title
+    };
+
+    leadMutation.mutate(leadData);
   };
 
   if (isLoading) {
@@ -205,8 +200,9 @@ export default function CategoryPage() {
                       onClick={() => handleKickstartClick(service)}
                       className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 group"
                       size="lg"
+                      disabled={leadMutation.isPending}
                     >
-                      Kickstart Your Project
+                      {leadMutation.isPending ? 'Kickstarting...' : 'Kickstart Your Project'}
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </CardContent>
@@ -217,125 +213,7 @@ export default function CategoryPage() {
         </div>
       </section>
 
-      {/* Lead Form Modal */}
-      <Dialog open={showLeadForm} onOpenChange={setShowLeadForm}>
-        <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-gray-900">
-              Kickstart Your {selectedService?.title}
-            </DialogTitle>
-            <p className="text-gray-600 mt-2">
-              Fill out this form and our project manager will call you within 5 minutes to discuss your requirements.
-            </p>
-          </DialogHeader>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-6">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h4 className="font-semibold text-blue-900">{selectedService?.title}</h4>
-                  <p className="text-sm text-blue-700">{selectedService?.description}</p>
-                </div>
-                <div className="text-blue-600 font-bold text-lg">
-                  ₹{selectedService?.hourlyRate}/hr
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="name">Full Name *</Label>
-                <Input
-                  id="name"
-                  {...register('name')}
-                  placeholder="Enter your full name"
-                  className="mt-1"
-                />
-                {errors.name && (
-                  <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
-                )}
-              </div>
-
-              <div>
-                <Label htmlFor="phone">Phone Number *</Label>
-                <Input
-                  id="phone"
-                  {...register('phone')}
-                  placeholder="Enter your phone number"
-                  className="mt-1"
-                />
-                {errors.phone && (
-                  <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="email">Email Address *</Label>
-              <Input
-                id="email"
-                type="email"
-                {...register('email')}
-                placeholder="Enter your email address"
-                className="mt-1"
-              />
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="budget">Project Budget *</Label>
-              <Select onValueChange={(value) => setValue('budget', value)}>
-                <SelectTrigger className="mt-1">
-                  <SelectValue placeholder="Select your budget range" />
-                </SelectTrigger>
-                <SelectContent>
-                  {budgetOptions.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {errors.budget && (
-                <p className="text-red-500 text-sm mt-1">{errors.budget.message}</p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="projectBrief">Project Details *</Label>
-              <Textarea
-                id="projectBrief"
-                {...register('projectBrief')}
-                placeholder="Describe your project requirements, features, timeline, and any specific needs..."
-                className="mt-1 min-h-[100px]"
-              />
-              {errors.projectBrief && (
-                <p className="text-red-500 text-sm mt-1">{errors.projectBrief.message}</p>
-              )}
-            </div>
-
-            <div className="flex space-x-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setShowLeadForm(false)}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={leadMutation.isPending}
-                className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-              >
-                {leadMutation.isPending ? 'Submitting...' : 'Submit Request'}
-              </Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
