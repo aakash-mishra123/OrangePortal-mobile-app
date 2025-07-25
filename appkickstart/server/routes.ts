@@ -110,14 +110,15 @@ router.post('/api/leads', async (req, res) => {
       message: 'Lead submitted successfully! Our manager will call you within 5 minutes.',
       leadId: lead._id
     });
-  } catch (error) {
+  } catch (error: any) {
     if (error.name === 'ZodError') {
       res.status(400).json({ 
         message: 'Validation failed',
         errors: error.errors
       });
     } else {
-      res.status(500).json({ message: 'Failed to submit lead' });
+      console.error('Lead submission error:', error);
+      res.status(500).json({ message: 'Failed to create lead' });
     }
   }
 });
@@ -170,7 +171,8 @@ router.post('/auth/admin/login', async (req, res) => {
       }
       res.json({ message: 'Admin logged in successfully', admin: { name: admin.name, email: admin.email } });
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Admin login error:', error);
     res.status(500).json({ message: 'Login failed' });
   }
 });
@@ -197,13 +199,14 @@ router.post('/auth/admin/register', async (req, res) => {
     await admin.save();
     
     res.status(201).json({ message: 'Admin created successfully' });
-  } catch (error) {
+  } catch (error: any) {
     if (error.name === 'ZodError') {
       res.status(400).json({ 
         message: 'Validation failed',
         errors: error.errors
       });
     } else {
+      console.error('Admin creation error:', error);
       res.status(500).json({ message: 'Failed to create admin' });
     }
   }
@@ -244,7 +247,8 @@ router.get('/api/admin/leads', requireAdmin, async (req, res) => {
       .sort({ [sortBy.toString()]: order === 'desc' ? -1 : 1 });
     
     res.json(leads);
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Fetch leads error:', error);
     res.status(500).json({ message: 'Failed to fetch leads' });
   }
 });
@@ -266,7 +270,8 @@ router.patch('/api/admin/leads/:id', requireAdmin, async (req, res) => {
     }
     
     res.json(lead);
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Update lead error:', error);
     res.status(500).json({ message: 'Failed to update lead' });
   }
 });
@@ -312,11 +317,12 @@ router.get('/api/admin/analytics', requireAdmin, async (req, res) => {
       serviceAnalytics,
       dailyLeads
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Analytics error:', error);
     res.status(500).json({ message: 'Failed to fetch analytics' });
   }
 });
 
-export function registerRoutes(app: Express) {
-  app.use('/', router);
+export function registerRoutes() {
+  return router;
 }

@@ -5,7 +5,7 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { registerRoutes } from './routes.js';
+import { registerRoutes } from './routes-simple.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,11 +13,8 @@ const __dirname = dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Connect to MongoDB
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/appkickstart';
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
+// Using in-memory storage for development
+console.log('🚀 Using in-memory storage for development');
 
 // Middleware
 app.use(express.json());
@@ -70,7 +67,7 @@ passport.deserializeUser((user: any, done) => {
 });
 
 // Routes
-registerRoutes(app);
+app.use('/', registerRoutes());
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {

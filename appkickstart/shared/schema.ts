@@ -2,15 +2,55 @@ import { z } from 'zod';
 
 // Service Categories Schema
 export const serviceCategories = [
-  { id: 'ui-design', name: 'UI Design', icon: 'palette' },
-  { id: 'ux-design', name: 'UX Design', icon: 'users' },
-  { id: 'mobile-app-dev', name: 'Mobile App Development', icon: 'smartphone', featured: true },
-  { id: 'web-development', name: 'Web Development', icon: 'globe' },
-  { id: 'ecommerce', name: 'E-commerce', icon: 'shopping-cart' },
-  { id: 'devops', name: 'DevOps', icon: 'server' },
-  { id: 'ai-ml', name: 'AI/ML', icon: 'brain' },
-  { id: 'qa-testing', name: 'QA & Testing', icon: 'check-circle' },
-  { id: 'maintenance', name: 'Maintenance', icon: 'wrench' }
+  { 
+    id: 'design-creative', 
+    name: 'Design & Creative', 
+    description: 'UI/UX Design, Wireframing, Mobile UI',
+    icon: 'fas fa-palette',
+    slug: 'design-creative',
+    serviceCount: 3
+  },
+  { 
+    id: 'web-development', 
+    name: 'Web Development', 
+    description: 'Frontend, Backend, CMS, PWA',
+    icon: 'fas fa-code',
+    slug: 'web-development',
+    serviceCount: 3
+  },
+  { 
+    id: 'mobile-app-dev', 
+    name: 'Mobile App Dev', 
+    description: 'Android, iOS, React Native',
+    icon: 'fas fa-mobile-alt',
+    slug: 'mobile-app-dev',
+    serviceCount: 3,
+    featured: true
+  },
+  { 
+    id: 'ecommerce', 
+    name: 'E-commerce', 
+    description: 'Shopify, Magento, Custom Store',
+    icon: 'fas fa-shopping-cart',
+    slug: 'ecommerce',
+    serviceCount: 2
+  },
+  { 
+    id: 'devops', 
+    name: 'DevOps', 
+    description: 'CI/CD, Cloud Migration, Terraform',
+    icon: 'fas fa-cloud',
+    slug: 'devops',
+    serviceCount: 3
+  },
+  { 
+    id: 'consulting', 
+    name: 'Consulting', 
+    description: 'Strategy, Digital Transformation',
+    icon: 'fas fa-lightbulb',
+    slug: 'consulting',
+    serviceCount: 2
+  }
 ] as const;
 
 // Mobile App Development Sub-Services
