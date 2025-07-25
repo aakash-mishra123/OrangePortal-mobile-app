@@ -3,6 +3,7 @@ import { Router, Route, Switch } from 'wouter';
 import { Toaster } from '@/components/ui/toaster';
 import HomePage from '@/pages/HomePage';
 import CategoryPage from '@/pages/CategoryPage';
+import ServiceDetail from '@/pages/service-detail';
 import AuthPage from '@/pages/AuthPage';
 import AdminLogin from '@/pages/AdminLogin';
 import AdminDashboard from '@/pages/AdminDashboard';
@@ -28,6 +29,7 @@ function App() {
               <Route path="/" component={AuthPage} />
               <Route path="/home" component={HomePage} />
               <Route path="/category/:categoryId" component={CategoryPage} />
+              <Route path="/service/:slug" component={ServiceDetail} />
               <Route path="/admin/login" component={AdminLogin} />
               <Route path="/admin/dashboard" component={AdminDashboard} />
               <Route component={NotFound} />
