@@ -101,6 +101,14 @@ Preferred communication style: Simple, everyday language.
 - **Replit Integration**: Special handling for Replit development environment
 
 ### Database Migration
-- **Current**: In-memory storage for immediate functionality
-- **Future**: Drizzle migrations ready for PostgreSQL deployment
-- **Command**: `npm run db:push` for schema deployment when database is provisioned
+- **Current**: PostgreSQL database fully configured and active
+- **Storage**: DatabaseStorage with user management and activity tracking
+- **Authentication**: Session-based auth with login/signup functionality
+- **Command**: `npm run db:push` for schema deployment
+
+## Mobile Application
+- **Platform**: React Native with Expo framework
+- **Features**: Complete mobile app with authentication, service browsing, search, and quote requests
+- **Navigation**: Bottom tabs with stack navigation for detailed views
+- **Backend Integration**: Full API integration with existing Express.js backend
+- **Location**: `mobile/` directory with comprehensive documentation
