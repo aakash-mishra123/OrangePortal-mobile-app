@@ -75,10 +75,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(user);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: error.errors[0].message });
+        return res.status(400).json({ message: "Invalid user data", errors: error.errors });
       }
       console.error("Registration error:", error);
       res.status(500).json({ message: "Failed to create user" });
+    }
+  });
+
+  // Login validation schema
+  const loginSchema = z.object({
+    email: z.string().email("Please enter a valid email address"),
+  });
+
+  app.post("/api/auth/login", async (req: Request, res: Response) => {
+    try {
+      const loginData = loginSchema.parse(req.body);
+      
+      // Find user by email
+      const user = await storage.getUserByEmail(loginData.email);
+      if (!user) {
+        return res.status(404).json({ message: "No user found with this email address" });
+      }
+
+      // Set user session
+      req.session.userId = user.id;
+      
+      res.json(user);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid login data", errors: error.errors });
+      }
+      console.error("Login error:", error);
+      res.status(500).json({ message: "Failed to login" });
     }
   });
 

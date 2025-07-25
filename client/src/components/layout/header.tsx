@@ -12,7 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import SignupModal from "@/components/auth/signup-modal";
+import AuthModal from "@/components/auth/auth-modal";
 
 export default function Header() {
   const [location] = useLocation();
@@ -223,7 +223,7 @@ export default function Header() {
         </div>
       </header>
 
-      <SignupModal 
+      <AuthModal 
         isOpen={isSignupModalOpen} 
         onClose={() => setIsSignupModalOpen(false)} 
       />

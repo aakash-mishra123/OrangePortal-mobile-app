@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import SignupModal from "@/components/auth/signup-modal";
+import AuthModal from "@/components/auth/auth-modal";
 
 export default function Footer() {
   const { isAuthenticated } = useAuth();
@@ -138,7 +138,7 @@ export default function Footer() {
         </div>
       </footer>
 
-      <SignupModal 
+      <AuthModal 
         isOpen={isSignupModalOpen} 
         onClose={() => setIsSignupModalOpen(false)} 
       />
