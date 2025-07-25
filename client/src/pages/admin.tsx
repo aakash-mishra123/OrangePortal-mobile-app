@@ -1,14 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { Link, useLocation } from "wouter";
 import { type Lead, type UserActivity } from "@shared/schema";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Download, Mail, Phone, Calendar, TrendingUp, Users, MessageSquare, Activity, Eye, Search } from "lucide-react";
+import { Download, Mail, Phone, Calendar, TrendingUp, Users, MessageSquare, Activity, Eye, Search, LogOut, Rocket, Clock, CheckCircle2, AlertCircle, Filter } from "lucide-react";
 import { format } from "date-fns";
 
 export default function Admin() {
+  const [, setLocation] = useLocation();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+
   const { data: leads, isLoading: leadsLoading } = useQuery<Lead[]>({
     queryKey: ["/api/leads"],
   });
@@ -21,17 +28,23 @@ export default function Admin() {
     queryKey: ["/api/admin/analytics"],
   });
 
+  const handleLogout = () => {
+    // Simple logout - redirect to admin login
+    setLocation("/admin-login");
+  };
+
   const exportToCSV = () => {
     if (!leads || leads.length === 0) return;
 
-    const headers = ["Date", "Name", "Email", "Phone", "Service", "Message"];
+    const headers = ["Date", "Name", "Email", "Phone", "Service", "Message", "Status"];
     const csvData = leads.map(lead => [
       format(new Date(lead.createdAt), "yyyy-MM-dd HH:mm"),
       lead.name,
       lead.email,
       lead.phone,
       lead.serviceName,
-      lead.message || ""
+      lead.message || "",
+      "New"
     ]);
 
     const csvContent = [headers, ...csvData]
@@ -42,17 +55,27 @@ export default function Admin() {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `orangemantra-leads-${format(new Date(), "yyyy-MM-dd")}.csv`;
+    a.download = `appkickstart-leads-${format(new Date(), "yyyy-MM-dd")}.csv`;
     a.click();
     window.URL.revokeObjectURL(url);
   };
+
+  // Filter leads based on search and status
+  const filteredLeads = leads?.filter(lead => {
+    const matchesSearch = 
+      lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead.serviceName.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    return matchesSearch;
+  }) || [];
 
   const isLoading = leadsLoading || activitiesLoading || analyticsLoading;
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-om-gray-50 p-8">
-        <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-8">
+        <div className="max-w-7xl mx-auto animate-in fade-in duration-500">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-300 rounded w-64 mb-8"></div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

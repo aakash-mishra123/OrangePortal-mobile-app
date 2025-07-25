@@ -55,63 +55,65 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-om-blue to-blue-900 text-white py-20">
-        <div className="absolute inset-0 bg-black opacity-50"></div>
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080')"
-          }}
-        ></div>
+      <section className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white py-20 overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-20 w-32 h-32 bg-white opacity-10 rounded-full animate-float"></div>
+          <div className="absolute top-40 right-32 w-24 h-24 bg-orange-400 opacity-20 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute bottom-20 left-1/3 w-40 h-40 bg-blue-400 opacity-10 rounded-full animate-float" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-1/2 right-1/4 w-16 h-16 bg-purple-400 opacity-15 rounded-full animate-bounce" style={{ animationDelay: '0.5s' }}></div>
+        </div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Transform Your Business with{" "}
-            <span className="text-om-orange">Expert IT Services</span>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-in slide-in-from-bottom-8 duration-1000">
+            Kickstart Your App or Website in{" "}
+            <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent animate-glow">Just 1 Hour!</span>
           </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90">
-            From web development to AI automation, we deliver comprehensive digital transformation solutions for modern enterprises.
+          <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90 animate-in slide-in-from-bottom-8 duration-1000" style={{ animationDelay: '200ms' }}>
+            Connect with expert developers instantly. Get your mobile app or website project kickstarted with professional consultation and rapid development.
           </p>
           
           {/* Search Bar */}
-          <div className="max-w-2xl mx-auto mb-12">
-            <div className="relative">
-              <Input
-                type="text"
-                placeholder="Search for services (e.g., web development, mobile apps, AI automation)"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-6 py-4 text-lg text-gray-900 bg-white rounded-full shadow-lg focus:outline-none focus:ring-4 focus:ring-om-orange focus:ring-opacity-50 pr-16"
-              />
-              <Button 
-                size="icon"
-                asChild
-                className="absolute right-2 top-2 bg-om-orange text-white p-3 rounded-full hover:bg-orange-600 transition-colors"
-              >
-                <Link href="/search">
-                  <Search className="h-5 w-5" />
-                </Link>
-              </Button>
+          <div className="max-w-2xl mx-auto mb-12 animate-in slide-in-from-bottom-8 duration-1000" style={{ animationDelay: '400ms' }}>
+            <div className="relative gradient-border">
+              <div className="relative z-10">
+                <Input
+                  type="text"
+                  placeholder="Search for services (e.g., Mobile Apps, Web Development, UI/UX Design)"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-6 py-4 text-lg text-gray-900 bg-white/95 backdrop-blur-sm rounded-full shadow-2xl focus:outline-none focus:ring-4 focus:ring-orange-400 focus:ring-opacity-50 pr-16 border-0"
+                />
+                <Button 
+                  size="icon"
+                  asChild
+                  className="absolute right-2 top-2 bg-gradient-to-r from-orange-500 to-red-500 text-white p-3 rounded-full hover:from-orange-600 hover:to-red-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-110"
+                >
+                  <Link href="/search">
+                    <Search className="h-5 w-5" />
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in slide-in-from-bottom-8 duration-1000" style={{ animationDelay: '600ms' }}>
             <Button 
               asChild
               size="lg"
-              className="bg-om-orange text-white px-8 py-4 text-lg font-semibold hover:bg-orange-600 transition-colors"
+              className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-4 text-lg font-semibold hover:from-orange-600 hover:to-red-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 hover-lift"
             >
-              <Link href="#services">Explore Services</Link>
+              <Link href="#services">🚀 Explore Services</Link>
             </Button>
             <Button 
               asChild
               variant="outline"
               size="lg"
-              className="border-2 border-white text-white px-8 py-4 text-lg font-semibold hover:bg-white hover:text-om-blue transition-colors"
+              className="border-2 border-white/80 backdrop-blur-sm text-white px-8 py-4 text-lg font-semibold hover:bg-white/90 hover:text-blue-900 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
             >
-              <Link href="/consultation">Schedule Consultation</Link>
+              <Link href="/consultation">💬 Free Consultation</Link>
             </Button>
           </div>
         </div>

@@ -186,6 +186,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin login endpoint
+  app.post("/api/admin/login", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      
+      // Simple admin credentials (in production, use proper authentication)
+      if (email === "admin@appkickstart.com" && password === "admin123") {
+        res.json({ 
+          success: true, 
+          message: "Login successful",
+          user: { email: "admin@appkickstart.com", role: "admin" }
+        });
+      } else {
+        res.status(401).json({ 
+          success: false, 
+          message: "Invalid credentials" 
+        });
+      }
+    } catch (error) {
+      console.error("Admin login error:", error);
+      res.status(500).json({ message: "Login failed" });
+    }
+  });
+
   // Create a new lead
   app.post("/api/leads", async (req, res) => {
     try {
