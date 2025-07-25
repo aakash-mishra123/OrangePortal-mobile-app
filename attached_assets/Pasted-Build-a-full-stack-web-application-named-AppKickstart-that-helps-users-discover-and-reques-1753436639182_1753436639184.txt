@@ -1,0 +1,87 @@
+Build a full-stack **web application** named **"AppKickstart"** that helps users discover and request **mobile app development services** quickly. The platform's core value is speed, simplicity, and expert-led project kickoff.
+
+🎯 Theme: **"Kickstart Your App or Website in Just 1 Hour!"**
+
+📌 Roles:
+1. **Customer** – browses services and submits a project request
+2. **Admin** – manages services, categories, and submitted leads
+
+---
+
+🧱 Tech Stack:
+- **Frontend:** React.js + Tailwind CSS + Framer Motion (for animations)
+- **Backend:** Node.js + Express.js
+- **Database:** MongoDB
+- **Authentication:** Google OAuth (Customer), Email/Password (Admin)
+- **Deployment Environment:** Replit
+
+---
+
+🔍 Key Features:
+
+### 🔹 Home Page:
+- **Moving Banner** with tagline:  
+  `"Kickstart Your App or Website in Just 1 Hour!"`
+- **Search Bar** (real-time filtering of services/categories)
+- **Interactive Category Grid** (7–8 service categories):
+  - UI Design
+  - UX Design
+  - **Mobile App Development** ✅ (primary focus)
+  - Web Development
+  - E-commerce
+  - DevOps
+  - AI/ML
+  - QA & Testing
+  - Maintenance
+
+---
+
+### 🔹 Category Page (e.g., Mobile App Development):
+- When user clicks on a category, show **5–6 relevant sub-services** as animated cards:
+  - Android Native App
+  - iOS Native App
+  - Flutter App
+  - React Native App
+  - Backend API (Firebase/Node)
+  - App UI Design
+
+Each service card should include:
+- **Hourly Rate** (₹1250/hr)
+- **Short Description**
+- **CTA Button: "Kickstart Your Project"**
+  → On click, open a **lead form** (Name, Phone, Email, Project Brief, Budget)
+
+After form submission:
+- Show a confirmation message:  
+  *"Our manager will call you within 5 minutes!"*
+- Store lead in MongoDB
+
+---
+
+### 🔹 Admin Panel:
+- Admin login via Email/Password
+- View dashboard with:
+  - Submitted leads (sortable, filterable)
+  - Service Categories (Add/Edit/Delete)
+  - Sub-Services under each category (Add/Edit/Delete)
+- Optional: Export leads to Excel
+
+---
+
+🎨 UI/UX Requirements:
+- Modern, clean layout using Tailwind CSS
+- Use Framer Motion for transitions, fade-ins, and hover effects
+- Icons for categories and tags
+- Sticky header with navigation
+- Responsive design (mobile-friendly)
+
+---
+
+⚙️ Optional Enhancements:
+- Razorpay/Stripe integration (dummy mode acceptable)
+- Push notifications or email confirmation (SendGrid or nodemailer)
+- Admin analytics dashboard (leads per day, popular services)
+
+---
+
+The web application must be fully functional and runnable in **Replit**, well-structured, modular, and optimized for scalability. Prioritize interactive design, fast performance, and lead conversion via the "Kickstart Your Project" flow.
