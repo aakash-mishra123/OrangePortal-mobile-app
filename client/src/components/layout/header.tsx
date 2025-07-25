@@ -18,15 +18,18 @@ export default function Header() {
             <Link href="/" className="text-om-gray-700 hover:text-om-orange transition-colors">
               Services
             </Link>
+            <Link href="/search" className="text-om-gray-700 hover:text-om-orange transition-colors">
+              Search
+            </Link>
+            <Link href="/compare" className="text-om-gray-700 hover:text-om-orange transition-colors">
+              Compare
+            </Link>
             <a href="#" className="text-om-gray-700 hover:text-om-orange transition-colors">
               About
             </a>
-            <a href="#" className="text-om-gray-700 hover:text-om-orange transition-colors">
-              Case Studies
-            </a>
-            <a href="#" className="text-om-gray-700 hover:text-om-orange transition-colors">
-              Contact
-            </a>
+            <Link href="/admin" className="text-om-gray-700 hover:text-om-orange transition-colors">
+              Admin
+            </Link>
             <Button className="bg-om-orange text-white px-6 py-2 hover:bg-orange-600 transition-colors">
               Get Quote
             </Button>

@@ -41,9 +41,13 @@ Preferred communication style: Simple, everyday language.
 - **Leads**: Contact form submissions for CRM integration
 
 ### Frontend Pages
-- **Home**: Hero section with category grid display
+- **Home**: Hero section with category grid display, testimonials, and stats
 - **Category**: Service listings filtered by category
 - **Service Detail**: Comprehensive service information with contact form
+- **Search**: Advanced search with filters for category, price, and sorting
+- **Compare**: Side-by-side service comparison (up to 3 services)
+- **Admin Dashboard**: Lead management, analytics, and data export
+- **Consultation**: Multi-step booking form for free consultations
 - **Layout**: Consistent header and footer across all pages
 
 ### Backend Routes
@@ -51,6 +55,7 @@ Preferred communication style: Simple, everyday language.
 - `GET /api/services` - Fetch all services or filter by category
 - `GET /api/service/:slug` - Fetch individual service details
 - `POST /api/leads` - Create new lead from contact form
+- `GET /api/leads` - Fetch all leads (admin access)
 
 ## Data Flow
 

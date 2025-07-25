@@ -7,6 +7,10 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Category from "@/pages/category";
 import ServiceDetail from "@/pages/service-detail";
+import SearchPage from "@/pages/search";
+import Compare from "@/pages/compare";
+import Admin from "@/pages/admin";
+import Consultation from "@/pages/consultation";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 
@@ -19,6 +23,10 @@ function Router() {
           <Route path="/" component={Home} />
           <Route path="/category/:slug" component={Category} />
           <Route path="/service/:slug" component={ServiceDetail} />
+          <Route path="/search" component={SearchPage} />
+          <Route path="/compare" component={Compare} />
+          <Route path="/admin" component={Admin} />
+          <Route path="/consultation" component={Consultation} />
           <Route component={NotFound} />
         </Switch>
       </main>

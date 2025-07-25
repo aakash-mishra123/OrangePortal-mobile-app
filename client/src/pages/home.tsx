@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { type Category } from "@shared/schema";
 import CategoryCard from "@/components/ui/category-card";
+import Testimonials from "@/components/ui/testimonials";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
@@ -77,9 +78,12 @@ export default function Home() {
               />
               <Button 
                 size="icon"
+                asChild
                 className="absolute right-2 top-2 bg-om-orange text-white p-3 rounded-full hover:bg-orange-600 transition-colors"
               >
-                <Search className="h-5 w-5" />
+                <Link href="/search">
+                  <Search className="h-5 w-5" />
+                </Link>
               </Button>
             </div>
           </div>
@@ -93,11 +97,12 @@ export default function Home() {
               <Link href="#services">Explore Services</Link>
             </Button>
             <Button 
+              asChild
               variant="outline"
               size="lg"
               className="border-2 border-white text-white px-8 py-4 text-lg font-semibold hover:bg-white hover:text-om-blue transition-colors"
             >
-              Schedule Consultation
+              <Link href="/consultation">Schedule Consultation</Link>
             </Button>
           </div>
         </div>
@@ -155,6 +160,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Testimonials Section */}
+      <Testimonials />
 
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-om-orange to-red-600 text-white">
