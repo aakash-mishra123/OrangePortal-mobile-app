@@ -1,5 +1,8 @@
 // Update this URL to match your backend deployment
-const API_BASE_URL = 'http://localhost:5000'; // Change to your deployed backend URL
+// For Replit development, use the current domain
+const API_BASE_URL = typeof window !== 'undefined' && window.location.origin 
+  ? window.location.origin 
+  : 'https://your-repl-name.replit.app'; // Replace with your actual Replit URL
 
 export async function apiRequest(
   endpoint: string,
