@@ -3,10 +3,13 @@ import { useRoute } from "wouter";
 import { useEffect } from "react";
 import { type Service } from "@shared/schema";
 import { Link } from "wouter";
-import { ChevronRight, Home, Check } from "lucide-react";
-import ContactForm from "@/components/ui/contact-form";
+import { ChevronRight, Home, Check, ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { trackUserActivity } from "@/lib/activityTracker";
+import KickstartButton from "@/components/ui/kickstart-button";
+import SimilarServices from "@/components/ui/similar-services";
 
 export default function ServiceDetail() {
   const [, params] = useRoute("/service/:slug");
@@ -78,14 +81,22 @@ export default function ServiceDetail() {
 
   if (!service) {
     return (
-      <div className="min-h-screen bg-om-gray-50">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center py-20">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Service Not Found</h1>
-            <p className="text-gray-600 mb-8">The requested service could not be found.</p>
-            <Link href="/" className="text-om-orange hover:underline">
-              Return to Home
-            </Link>
+          <div className="text-center py-20 animate-in fade-in duration-500">
+            <div className="mb-8">
+              <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto flex items-center justify-center mb-4">
+                <span className="text-4xl">❓</span>
+              </div>
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">Service Not Found</h1>
+            <p className="text-gray-600 mb-8 text-lg">The requested service could not be found.</p>
+            <Button asChild className="bg-orange-500 hover:bg-orange-600 text-white">
+              <Link href="/home">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Home
+              </Link>
+            </Button>
           </div>
         </div>
       </div>
@@ -97,31 +108,31 @@ export default function ServiceDetail() {
   ).join(' ');
 
   return (
-    <div className="min-h-screen bg-om-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
-        <nav className="mb-8">
+        <nav className="mb-8 animate-in slide-in-from-top-4 duration-300">
           <ol className="flex items-center space-x-2 text-sm">
             <li>
-              <Link href="/" className="text-om-gray-500 hover:text-om-orange flex items-center">
+              <Link href="/home" className="text-gray-500 hover:text-orange-500 flex items-center transition-colors duration-200">
                 <Home className="h-4 w-4" />
               </Link>
             </li>
             <li>
-              <ChevronRight className="h-4 w-4 text-om-gray-400" />
+              <ChevronRight className="h-4 w-4 text-gray-400" />
             </li>
             <li>
               <Link 
                 href={`/category/${service.categoryId}`}
-                className="text-om-gray-500 hover:text-om-orange"
+                className="text-gray-500 hover:text-orange-500 transition-colors duration-200"
               >
                 {categoryName}
               </Link>
             </li>
             <li>
-              <ChevronRight className="h-4 w-4 text-om-gray-400" />
+              <ChevronRight className="h-4 w-4 text-gray-400" />
             </li>
-            <li className="text-om-blue font-medium">{service.title}</li>
+            <li className="text-blue-600 font-medium">{service.title}</li>
           </ol>
         </nav>
 
@@ -183,10 +194,18 @@ export default function ServiceDetail() {
             </div>
           </div>
 
-          {/* Contact Form */}
+          {/* Kickstart Button */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl p-6 shadow-sm sticky top-24">
-              <ContactForm service={service} />
+            <div className="sticky top-24 space-y-6">
+              <KickstartButton service={service} />
+              
+              {/* Similar Services */}
+              <Card className="shadow-lg animate-in slide-in-from-right-6 duration-700">
+                <CardContent className="p-6">
+                  <h3 className="text-lg font-semibold text-blue-800 mb-4">Similar Services</h3>
+                  <SimilarServices currentServiceId={service.id} categoryId={service.categoryId} />
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
