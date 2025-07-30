@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { trackUserActivity } from "@/lib/activityTracker";
 import AchievementCards from "@/components/ui/achievement-cards";
 import ResourceSelector from "@/components/ui/resource-selector";
-import ProjectDetailsForm from "@/components/ui/project-details-form";
+import InteractiveStepperForm from "@/components/ui/interactive-stepper-form";
 import { resourceTypes } from "@/components/ui/resource-selector";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -171,14 +171,20 @@ export default function ServiceDetail() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
             {/* Service Header */}
-            <Card className="animate-in slide-in-from-left-6 duration-700">
+            <Card className="interactive-card animate-in slide-in-from-left-6 duration-700 hover-glow border-0 shadow-2xl">
               <CardContent className="p-8">
-                <div className="mb-6">
+                <div className="mb-6 relative overflow-hidden rounded-xl">
                   <img 
                     src={service.imageUrl} 
                     alt={service.title}
-                    className="w-full h-64 object-cover rounded-lg shadow-md"
+                    className="w-full h-64 object-cover rounded-xl shadow-lg transition-transform duration-500 hover:scale-110"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
+                  <div className="absolute top-4 right-4">
+                    <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-gray-800 animate-bounce-slow">
+                      🔥 Hot Service
+                    </div>
+                  </div>
                 </div>
                 <div className="flex items-center justify-between mb-4">
                   <h1 className="text-3xl font-bold text-gray-800">{service.title}</h1>
@@ -262,7 +268,7 @@ export default function ServiceDetail() {
                   </div>
                   
                   {selectedResourceData && (
-                    <ProjectDetailsForm
+                    <InteractiveStepperForm
                       serviceId={service.id}
                       serviceName={service.title}
                       resourceType={selectedResource!}
