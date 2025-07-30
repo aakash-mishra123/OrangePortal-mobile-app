@@ -148,6 +148,17 @@ export default function Home() {
       {/* Service Categories */}
       <section id="services" className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Running Message */}
+          <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white p-3 sm:p-4 rounded-2xl shadow-lg mb-8 sm:mb-12 animate-in slide-in-from-top-4 duration-500">
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+              <span className="text-sm sm:text-base font-medium text-center">
+                🚀 Professional development services • Real market rates • 500+ successful projects • Get started in 1 hour
+              </span>
+              <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+            </div>
+          </div>
+
           <div className="text-center mb-12 sm:mb-16 lg:mb-20 animate-fade-in-up">
             <div className="mb-4 sm:mb-6">
               <span className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs sm:text-sm font-medium border border-blue-200">

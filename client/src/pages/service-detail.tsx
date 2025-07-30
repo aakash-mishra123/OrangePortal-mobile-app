@@ -206,6 +206,17 @@ export default function ServiceDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-12">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6 lg:space-y-8">
+            {/* Running Message Banner */}
+            <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-3 sm:p-4 rounded-2xl shadow-lg animate-in slide-in-from-top-4 duration-500">
+              <div className="flex items-center justify-center space-x-2">
+                <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                <span className="text-sm sm:text-base font-medium text-center">
+                  🚀 Expert consultation available in 5 minutes • 500+ successful projects delivered • Get instant quote
+                </span>
+                <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+              </div>
+            </div>
+
             {/* Service Header */}
             <Card className="interactive-card animate-in slide-in-from-left-6 duration-700 hover-glow border-0 shadow-2xl">
               <CardContent className="p-4 sm:p-6 lg:p-8">
