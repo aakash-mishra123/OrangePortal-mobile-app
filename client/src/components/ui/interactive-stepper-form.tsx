@@ -297,7 +297,10 @@ export default function InteractiveStepperForm({
               <Target className="h-4 w-4 text-indigo-500" />
               <span>Experience Level Required *</span>
             </Label>
-            <Select onValueChange={(value) => step2Form.setValue("experienceLevel", value)}>
+            <Select 
+              onValueChange={(value) => step2Form.setValue("experienceLevel", value)}
+              defaultValue={step2Form.watch("experienceLevel")}
+            >
               <SelectTrigger className="h-12 border-2 border-gray-200 rounded-xl focus:border-indigo-500 transition-all duration-300 hover:border-indigo-300">
                 <SelectValue placeholder="Select the experience level you need" />
               </SelectTrigger>

@@ -13,6 +13,7 @@ import Admin from "@/pages/admin";
 import AdminLogin from "@/pages/admin-login";
 import AdminDashboard from "@/pages/admin-dashboard";
 import Consultation from "@/pages/consultation";
+import AuthPage from "@/pages/auth";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 
@@ -23,6 +24,7 @@ function Router() {
         {/* Admin routes without header/footer */}
         <Route path="/admin-login" component={AdminLogin} />
         <Route path="/admin-dashboard" component={AdminDashboard} />
+        <Route path="/auth" component={AuthPage} />
         
         {/* Regular routes with header/footer */}
         <Route>
