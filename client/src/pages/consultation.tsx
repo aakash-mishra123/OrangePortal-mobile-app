@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -12,6 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Calendar, Clock, User, Mail, Phone, MessageSquare } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { useAuth } from "@/hooks/useAuth";
 
 const consultationSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -65,6 +66,7 @@ const timeSlots = [
 
 export default function Consultation() {
   const { toast } = useToast();
+  const { user, isAuthenticated, isLoading } = useAuth();
   const [step, setStep] = useState(1);
 
   const form = useForm<ConsultationFormData>({
@@ -82,6 +84,23 @@ export default function Consultation() {
       message: "",
     },
   });
+
+  // Auto-skip step 1 and pre-fill form if user is authenticated
+  useEffect(() => {
+    if (isAuthenticated && user && step === 1) {
+      // Pre-fill form with user data
+      form.setValue("name", `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email || '');
+      form.setValue("email", user.email || '');
+      
+      // Skip to step 2 (Project Details) since contact info is already available
+      setStep(2);
+      
+      toast({
+        title: "Welcome back!",
+        description: "We've pre-filled your contact information. Please provide your project details.",
+      });
+    }
+  }, [isAuthenticated, user, step, form, toast]);
 
   const bookConsultationMutation = useMutation({
     mutationFn: async (data: ConsultationFormData) => {
@@ -132,6 +151,21 @@ export default function Consultation() {
     });
   };
 
+  // Show loading while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+        <Card className="max-w-md mx-auto">
+          <CardContent className="p-8 text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">Loading...</h2>
+            <p className="text-gray-600">Checking your account details</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   if (step === 3) {
     return (
       <div className="min-h-screen bg-om-gray-50 flex items-center justify-center">
@@ -177,26 +211,45 @@ export default function Consultation() {
         {/* Progress Indicator */}
         <div className="flex items-center justify-center mb-8">
           <div className="flex items-center space-x-4">
-            <div className={`flex items-center justify-center w-8 h-8 rounded-full ${step >= 1 ? 'bg-om-orange text-white' : 'bg-gray-300'}`}>
-              <User className="h-4 w-4" />
-            </div>
-            <div className={`w-16 h-1 ${step >= 2 ? 'bg-om-orange' : 'bg-gray-300'}`}></div>
-            <div className={`flex items-center justify-center w-8 h-8 rounded-full ${step >= 2 ? 'bg-om-orange text-white' : 'bg-gray-300'}`}>
+            {/* Step 1: Contact Info (Skip if authenticated) */}
+            {!isAuthenticated && (
+              <>
+                <div className={`flex items-center justify-center w-8 h-8 rounded-full ${step >= 1 ? 'bg-orange-500 text-white' : 'bg-gray-300'}`}>
+                  <User className="h-4 w-4" />
+                </div>
+                <div className={`w-16 h-1 ${step >= 2 ? 'bg-orange-500' : 'bg-gray-300'}`}></div>
+              </>
+            )}
+            
+            {/* Step 2: Project Details */}
+            <div className={`flex items-center justify-center w-8 h-8 rounded-full ${step >= 2 ? 'bg-orange-500 text-white' : 'bg-gray-300'}`}>
               <MessageSquare className="h-4 w-4" />
+            </div>
+            
+            <div className={`w-16 h-1 ${step >= 3 ? 'bg-orange-500' : 'bg-gray-300'}`}></div>
+            
+            {/* Step 3: Confirmation */}
+            <div className={`flex items-center justify-center w-8 h-8 rounded-full ${step >= 3 ? 'bg-orange-500 text-white' : 'bg-gray-300'}`}>
+              <Calendar className="h-4 w-4" />
             </div>
           </div>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl text-om-blue">
-              {step === 1 ? "Your Information" : "Project Details & Scheduling"}
+            <CardTitle className="text-2xl text-orange-600">
+              {step === 1 && !isAuthenticated ? "Let's Get to Know You!" : "Project Details & Scheduling"}
             </CardTitle>
+            {isAuthenticated && step === 2 && (
+              <p className="text-gray-600 mt-2">
+                Welcome back! We've pre-filled your contact information. Please provide your project details.
+              </p>
+            )}
           </CardHeader>
           <CardContent className="p-8">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                {step === 1 && (
+                {step === 1 && !isAuthenticated && (
                   <>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <FormField
@@ -260,9 +313,9 @@ export default function Consultation() {
                       <Button 
                         type="button" 
                         onClick={nextStep}
-                        className="bg-om-orange text-white hover:bg-orange-600"
+                        className="bg-orange-600 text-white hover:bg-orange-700"
                       >
-                        Next Step
+                        Continue to Project Details
                       </Button>
                     </div>
                   </>
@@ -270,6 +323,24 @@ export default function Consultation() {
 
                 {step === 2 && (
                   <>
+                    {/* Show contact info summary for authenticated users */}
+                    {isAuthenticated && (
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                        <h3 className="text-lg font-semibold text-blue-800 mb-2">Your Contact Information</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <span className="font-medium text-blue-700">Name:</span> {form.getValues("name") || "Not provided"}
+                          </div>
+                          <div>
+                            <span className="font-medium text-blue-700">Email:</span> {form.getValues("email") || "Not provided"}
+                          </div>
+                        </div>
+                        <p className="text-xs text-blue-600 mt-2">
+                          We'll use this information to contact you about your consultation.
+                        </p>
+                      </div>
+                    )}
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <FormField
                         control={form.control}
@@ -409,17 +480,32 @@ export default function Consultation() {
                     />
 
                     <div className="flex justify-between">
-                      <Button 
-                        type="button" 
-                        variant="outline"
-                        onClick={() => setStep(1)}
-                      >
-                        Previous
-                      </Button>
+                      {/* Only show Previous button for non-authenticated users who started from step 1 */}
+                      {!isAuthenticated && (
+                        <Button 
+                          type="button" 
+                          variant="outline"
+                          onClick={() => setStep(1)}
+                        >
+                          Previous
+                        </Button>
+                      )}
+                      
+                      {/* For authenticated users, show a cancel button instead */}
+                      {isAuthenticated && (
+                        <Button 
+                          type="button" 
+                          variant="outline"
+                          onClick={() => window.location.href = '/'}
+                        >
+                          Cancel
+                        </Button>
+                      )}
+                      
                       <Button 
                         type="submit"
                         disabled={bookConsultationMutation.isPending}
-                        className="bg-om-orange text-white hover:bg-orange-600"
+                        className="bg-orange-600 text-white hover:bg-orange-700"
                       >
                         {bookConsultationMutation.isPending ? "Booking..." : "Book Consultation"}
                       </Button>
