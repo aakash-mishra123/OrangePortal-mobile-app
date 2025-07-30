@@ -67,12 +67,26 @@ export default function Home() {
         </div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-in slide-in-from-bottom-8 duration-1000">
-            Kickstart Your App or Website in{" "}
-            <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent animate-glow">Just 1 Hour!</span>
+          <div className="mb-6 animate-in slide-in-from-bottom-8 duration-1000">
+            <span className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30 text-orange-300 text-sm font-medium backdrop-blur-sm">
+              🚀 Trusted by 500+ Companies • 10+ Years Experience
+            </span>
+          </div>
+          
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 animate-in slide-in-from-bottom-8 duration-1000" style={{ animationDelay: '200ms' }}>
+            <span className="block bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent leading-tight">
+              Kickstart Your
+            </span>
+            <span className="block bg-gradient-to-r from-orange-400 via-red-400 to-pink-400 bg-clip-text text-transparent font-extrabold leading-tight">
+              App or Website
+            </span>
+            <span className="block text-3xl md:text-5xl lg:text-6xl mt-2 bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent font-bold animate-glow">
+              in Just 1 Hour! ⚡
+            </span>
           </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90 animate-in slide-in-from-bottom-8 duration-1000" style={{ animationDelay: '200ms' }}>
-            Connect with expert developers instantly. Get your mobile app or website project kickstarted with professional consultation and rapid development.
+          
+          <p className="text-xl md:text-2xl mb-12 max-w-4xl mx-auto opacity-90 animate-in slide-in-from-bottom-8 duration-1000" style={{ animationDelay: '400ms' }}>
+            Connect with expert developers instantly. Get your mobile app or website project kickstarted with professional consultation, rapid prototyping, and world-class development.
           </p>
           
           {/* Search Bar */}
@@ -99,21 +113,33 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in slide-in-from-bottom-8 duration-1000" style={{ animationDelay: '600ms' }}>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center animate-in slide-in-from-bottom-8 duration-1000" style={{ animationDelay: '800ms' }}>
             <Button 
               asChild
               size="lg"
-              className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-4 text-lg font-semibold hover:from-orange-600 hover:to-red-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 hover-lift"
+              className="group bg-gradient-to-r from-orange-500 to-red-500 text-white px-10 py-5 text-xl font-bold hover:from-orange-600 hover:to-red-600 transition-all duration-300 shadow-2xl hover:shadow-orange-500/25 transform hover:scale-110 hover:-translate-y-1 rounded-2xl"
             >
-              <Link href="#services">🚀 Explore Services</Link>
+              <Link href="#services">
+                <span className="flex items-center space-x-3">
+                  <span>🚀</span>
+                  <span>Explore Services</span>
+                  <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+                </span>
+              </Link>
             </Button>
             <Button 
               asChild
               variant="outline"
               size="lg"
-              className="border-2 border-white/80 backdrop-blur-sm text-white px-8 py-4 text-lg font-semibold hover:bg-white/90 hover:text-blue-900 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="group border-3 border-white/80 backdrop-blur-sm text-white px-10 py-5 text-xl font-bold hover:bg-white/95 hover:text-slate-900 transition-all duration-300 shadow-2xl hover:shadow-white/25 transform hover:scale-110 hover:-translate-y-1 rounded-2xl"
             >
-              <Link href="/consultation">💬 Free Consultation</Link>
+              <Link href="/consultation">
+                <span className="flex items-center space-x-3">
+                  <span>💬</span>
+                  <span>Free Consultation</span>
+                  <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+                </span>
+              </Link>
             </Button>
           </div>
         </div>
@@ -122,12 +148,17 @@ export default function Home() {
       {/* Service Categories */}
       <section id="services" className="py-20 bg-om-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-om-blue mb-4">
+          <div className="text-center mb-20 animate-fade-in-up">
+            <div className="mb-6">
+              <span className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-sm font-medium border border-blue-200">
+                ⚡ Lightning-Fast Development
+              </span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-slate-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent mb-6">
               Our Service Categories
             </h2>
-            <p className="text-xl text-om-gray-500 max-w-3xl mx-auto">
-              Comprehensive digital transformation services tailored for modern enterprises across all industries.
+            <p className="text-xl md:text-2xl text-slate-600 max-w-4xl mx-auto leading-relaxed">
+              Comprehensive digital transformation services with <span className="font-bold text-orange-600">world-class expertise</span> tailored for modern enterprises across all industries.
             </p>
           </div>
 

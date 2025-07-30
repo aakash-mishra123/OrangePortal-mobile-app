@@ -87,37 +87,53 @@ export default function ServiceDetail() {
   };
 
   const handleProjectSubmit = (projectData: any) => {
-    if (!service || !selectedResource) return;
+    try {
+      if (!service || !selectedResource) {
+        console.error('Missing service or resource data');
+        return;
+      }
 
-    const selectedResourceData = resourceTypes.find(r => r.id === selectedResource);
-    if (!selectedResourceData) return;
+      const selectedResourceData = resourceTypes.find(r => r.id === selectedResource);
+      if (!selectedResourceData) {
+        console.error('Resource not found');
+        return;
+      }
 
-    const leadData = {
-      serviceId: service.id,
-      serviceName: service.title,
-      resourceType: selectedResourceData.title,
-      ...projectData
-    };
+      const leadData = {
+        serviceId: service.id,
+        serviceName: service.title,
+        resourceType: selectedResourceData.title,
+        ...projectData
+      };
 
-    leadMutation.mutate(leadData);
+      console.log('Submitting lead data:', leadData);
+      leadMutation.mutate(leadData);
+    } catch (error) {
+      console.error('Project submission error:', error);
+      toast({
+        title: "Submission Error",
+        description: "An error occurred while submitting your project. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="animate-pulse">
-            <div className="h-4 bg-gray-300 rounded w-96 mb-8"></div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div className="h-6 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full w-80 mb-12"></div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
               <div className="lg:col-span-2">
-                <div className="bg-white rounded-xl p-8 shadow-sm">
-                  <div className="w-full h-64 bg-gray-300 rounded-lg mb-6"></div>
-                  <div className="h-8 bg-gray-300 rounded w-3/4 mb-4"></div>
-                  <div className="h-6 bg-gray-300 rounded w-1/2 mb-6"></div>
-                  <div className="space-y-3 mb-8">
-                    <div className="h-4 bg-gray-300 rounded w-full"></div>
-                    <div className="h-4 bg-gray-300 rounded w-full"></div>
-                    <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-10 shadow-xl border border-white/50">
+                  <div className="w-full h-80 bg-gradient-to-br from-gray-200 to-gray-300 rounded-2xl mb-8"></div>
+                  <div className="h-10 bg-gradient-to-r from-gray-200 to-gray-300 rounded-xl w-3/4 mb-6"></div>
+                  <div className="h-8 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/2 mb-8"></div>
+                  <div className="space-y-4 mb-10">
+                    <div className="h-5 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-full"></div>
+                    <div className="h-5 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-full"></div>
+                    <div className="h-5 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-3/4"></div>
                   </div>
                 </div>
               </div>

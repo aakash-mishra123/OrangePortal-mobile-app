@@ -120,8 +120,22 @@ export default function InteractiveStepperForm({
   };
 
   const handleStep3Submit = (data: Step3Data) => {
-    const finalData = { ...formData, ...data } as FormData;
-    onSubmit(finalData);
+    try {
+      const finalData = { 
+        ...formData, 
+        ...data,
+        // Map form fields to the expected API format
+        projectTitle: formData.projectDetails || '',
+        projectDescription: formData.projectDetails || '',
+        message: data.timeFrame || ''
+      } as FormData;
+      
+      console.log('Form submission data:', finalData);
+      onSubmit(finalData);
+    } catch (error) {
+      console.error('Form submission error:', error);
+      // Don't throw - handle gracefully
+    }
   };
 
   const goToPreviousStep = () => {
