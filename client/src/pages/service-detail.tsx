@@ -60,7 +60,19 @@ export default function ServiceDetail() {
 
   const leadMutation = useMutation({
     mutationFn: async (leadData: any) => {
-      return await apiRequest("/api/leads", "POST", leadData);
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(leadData),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      return await response.json();
     },
     onSuccess: () => {
       toast({
