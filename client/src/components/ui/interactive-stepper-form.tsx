@@ -312,37 +312,21 @@ export default function InteractiveStepperForm({
               <span>Experience Level Required *</span>
             </Label>
             <Select 
-              onValueChange={(value) => step2Form.setValue("experienceLevel", value)}
-              value={step2Form.watch("experienceLevel")}
+              onValueChange={(value) => {
+                if (value) {
+                  step2Form.setValue("experienceLevel", value);
+                }
+              }}
+              value={step2Form.watch("experienceLevel") || ""}
             >
               <SelectTrigger className="h-12 border-2 border-gray-200 rounded-xl focus:border-indigo-500 transition-all duration-300 hover:border-indigo-300">
                 <SelectValue placeholder="Select the experience level you need" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="junior">
-                  <div className="flex items-center space-x-2">
-                    <Badge variant="outline" className="bg-green-50 text-green-700">Junior</Badge>
-                    <span>1-2 years experience</span>
-                  </div>
-                </SelectItem>
-                <SelectItem value="mid">
-                  <div className="flex items-center space-x-2">
-                    <Badge variant="outline" className="bg-blue-50 text-blue-700">Mid-level</Badge>
-                    <span>3-5 years experience</span>
-                  </div>
-                </SelectItem>
-                <SelectItem value="senior">
-                  <div className="flex items-center space-x-2">
-                    <Badge variant="outline" className="bg-purple-50 text-purple-700">Senior</Badge>
-                    <span>5+ years experience</span>
-                  </div>
-                </SelectItem>
-                <SelectItem value="lead">
-                  <div className="flex items-center space-x-2">
-                    <Badge variant="outline" className="bg-orange-50 text-orange-700">Lead/Expert</Badge>
-                    <span>8+ years experience</span>
-                  </div>
-                </SelectItem>
+                <SelectItem value="junior">Junior (1-2 years experience)</SelectItem>
+                <SelectItem value="mid">Mid-level (3-5 years experience)</SelectItem>
+                <SelectItem value="senior">Senior (5+ years experience)</SelectItem>
+                <SelectItem value="lead">Lead/Expert (8+ years experience)</SelectItem>
               </SelectContent>
             </Select>
             {step2Form.formState.errors.experienceLevel && step2Form.formState.isSubmitted && (
@@ -397,18 +381,22 @@ export default function InteractiveStepperForm({
                 <span>Project Duration *</span>
               </Label>
               <Select 
-                onValueChange={(value) => step3Form.setValue("projectDuration", value)}
-                value={step3Form.watch("projectDuration")}
+                onValueChange={(value) => {
+                  if (value) {
+                    step3Form.setValue("projectDuration", value);
+                  }
+                }}
+                value={step3Form.watch("projectDuration") || ""}
               >
                 <SelectTrigger className="h-12 border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-all duration-300 hover:border-blue-300">
                   <SelectValue placeholder="Select duration" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1week">🚀 1 Week or less</SelectItem>
-                  <SelectItem value="2-4weeks">⚡ 2-4 Weeks</SelectItem>
-                  <SelectItem value="1-3months">📅 1-3 Months</SelectItem>
-                  <SelectItem value="3-6months">🏗️ 3-6 Months</SelectItem>
-                  <SelectItem value="6months+">🏛️ 6+ Months</SelectItem>
+                  <SelectItem value="1week">1 Week or less</SelectItem>
+                  <SelectItem value="2-4weeks">2-4 Weeks</SelectItem>
+                  <SelectItem value="1-3months">1-3 Months</SelectItem>
+                  <SelectItem value="3-6months">3-6 Months</SelectItem>
+                  <SelectItem value="6months+">6+ Months</SelectItem>
                 </SelectContent>
               </Select>
               {step3Form.formState.errors.projectDuration && step3Form.formState.isSubmitted && (
@@ -422,18 +410,22 @@ export default function InteractiveStepperForm({
                 <span>Budget Range *</span>
               </Label>
               <Select 
-                onValueChange={(value) => step3Form.setValue("budget", value)}
-                value={step3Form.watch("budget")}
+                onValueChange={(value) => {
+                  if (value) {
+                    step3Form.setValue("budget", value);
+                  }
+                }}
+                value={step3Form.watch("budget") || ""}
               >
                 <SelectTrigger className="h-12 border-2 border-gray-200 rounded-xl focus:border-green-500 transition-all duration-300 hover:border-green-300">
                   <SelectValue placeholder="Select budget range" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="<50k">💡 Less than ₹50,000</SelectItem>
-                  <SelectItem value="50k-1lakh">🚀 ₹50,000 - ₹1,00,000</SelectItem>
-                  <SelectItem value="1-2lakh">🏢 ₹1,00,000 - ₹2,00,000</SelectItem>
-                  <SelectItem value="2-5lakh">🏆 ₹2,00,000 - ₹5,00,000</SelectItem>
-                  <SelectItem value="5lakh+">💎 ₹5,00,000+</SelectItem>
+                  <SelectItem value="<50k">Less than ₹50,000</SelectItem>
+                  <SelectItem value="50k-1lakh">₹50,000 - ₹1,00,000</SelectItem>
+                  <SelectItem value="1-2lakh">₹1,00,000 - ₹2,00,000</SelectItem>
+                  <SelectItem value="2-5lakh">₹2,00,000 - ₹5,00,000</SelectItem>
+                  <SelectItem value="5lakh+">₹5,00,000+</SelectItem>
                 </SelectContent>
               </Select>
               {step3Form.formState.errors.budget && step3Form.formState.isSubmitted && (
@@ -448,18 +440,22 @@ export default function InteractiveStepperForm({
               <span>Expected Start Time *</span>
             </Label>
             <Select 
-              onValueChange={(value) => step3Form.setValue("timeFrame", value)}
-              value={step3Form.watch("timeFrame")}
+              onValueChange={(value) => {
+                if (value) {
+                  step3Form.setValue("timeFrame", value);
+                }
+              }}
+              value={step3Form.watch("timeFrame") || ""}
             >
               <SelectTrigger className="h-12 border-2 border-gray-200 rounded-xl focus:border-purple-500 transition-all duration-300 hover:border-purple-300">
                 <SelectValue placeholder="When would you like to start?" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="immediately">🔥 Immediately</SelectItem>
-                <SelectItem value="1week">📅 Within 1 week</SelectItem>
-                <SelectItem value="2weeks">🗓️ Within 2 weeks</SelectItem>
-                <SelectItem value="1month">📆 Within 1 month</SelectItem>
-                <SelectItem value="flexible">🤝 Flexible</SelectItem>
+                <SelectItem value="immediately">Immediately</SelectItem>
+                <SelectItem value="1week">Within 1 week</SelectItem>
+                <SelectItem value="2weeks">Within 2 weeks</SelectItem>
+                <SelectItem value="1month">Within 1 month</SelectItem>
+                <SelectItem value="flexible">Flexible</SelectItem>
               </SelectContent>
             </Select>
             {step3Form.formState.errors.timeFrame && step3Form.formState.isSubmitted && (
