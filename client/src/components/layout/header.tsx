@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { Menu, X, User, LogOut, Download } from "lucide-react";
-import { pwaManager } from "@/lib/pwa";
+import { Menu, X, User, LogOut } from "lucide-react";
+import PWAInstallButton from "@/components/pwa-install-button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,27 +19,9 @@ export default function Header() {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
-  const [canInstallPWA, setCanInstallPWA] = useState(false);
   const { user, isAuthenticated, isLoading } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-
-  useEffect(() => {
-    setCanInstallPWA(pwaManager.canInstall());
-    
-    // Listen for PWA install state changes
-    const checkInstallability = () => {
-      setCanInstallPWA(pwaManager.canInstall());
-    };
-
-    window.addEventListener('beforeinstallprompt', checkInstallability);
-    window.addEventListener('appinstalled', checkInstallability);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', checkInstallability);
-      window.removeEventListener('appinstalled', checkInstallability);
-    };
-  }, []);
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
@@ -82,16 +64,6 @@ export default function Header() {
     logoutMutation.mutate();
   };
 
-  const handleInstallPWA = async () => {
-    const installed = await pwaManager.installApp();
-    if (installed) {
-      toast({
-        title: "App installed successfully!",
-        description: "AppKickstart is now available on your home screen.",
-      });
-    }
-  };
-
   return (
     <>
       <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
@@ -123,17 +95,7 @@ export default function Header() {
 
             {/* PWA Install Button & User Authentication */}
             <div className="hidden md:flex items-center space-x-4">
-              {canInstallPWA && (
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={handleInstallPWA}
-                  className="flex items-center space-x-2 border-orange-200 hover:bg-orange-50"
-                >
-                  <Download className="h-4 w-4" />
-                  <span>Install App</span>
-                </Button>
-              )}
+              <PWAInstallButton />
               
               {isLoading ? (
                 <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse" />

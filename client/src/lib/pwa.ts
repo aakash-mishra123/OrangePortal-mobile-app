@@ -36,7 +36,7 @@ export class PWAManager {
       console.log('PWA: Install prompt triggered');
       e.preventDefault();
       this.deferredPrompt = e as BeforeInstallPromptEvent;
-      this.showInstallBanner();
+      // Don't show banner automatically, let the header button handle it
     });
 
     // Listen for app installed event
@@ -54,7 +54,9 @@ export class PWAManager {
   private async registerServiceWorker() {
     if ('serviceWorker' in navigator) {
       try {
-        const registration = await navigator.serviceWorker.register('/sw.js');
+        const registration = await navigator.serviceWorker.register('/sw.js', {
+          scope: '/'
+        });
         console.log('PWA: Service Worker registered', registration);
 
         // Listen for updates

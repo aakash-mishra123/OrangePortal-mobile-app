@@ -16,6 +16,7 @@ import Consultation from "@/pages/consultation";
 import AuthPage from "@/pages/auth";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
+import PWAStatus from "@/components/pwa-status";
 import { useEffect } from "react";
 
 function Router() {
@@ -62,6 +63,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
+        <PWAStatus />
         <Router />
       </TooltipProvider>
     </QueryClientProvider>

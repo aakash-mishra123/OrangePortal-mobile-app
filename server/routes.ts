@@ -300,6 +300,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // PWA Routes - serve manifest and service worker
+  app.get('/manifest.json', (req: Request, res: Response) => {
+    res.setHeader('Content-Type', 'application/manifest+json');
+    res.sendFile('manifest.json', { root: 'public' });
+  });
+
+  app.get('/sw.js', (req: Request, res: Response) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.setHeader('Service-Worker-Allowed', '/');
+    res.sendFile('sw.js', { root: 'public' });
+  });
+
+  app.get('/offline.html', (req: Request, res: Response) => {
+    res.sendFile('offline.html', { root: 'public' });
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
