@@ -139,6 +139,8 @@ Preferred communication style: Simple, everyday language.
 - **Push Notifications**: Support for push notifications and background sync
 - **Native Experience**: Standalone display mode with proper theming and icons
 - **Performance**: Optimized caching strategies for fast loading and offline use
+- **Local Development**: Complete PWA setup guide created for local development environment
+- **Conditional Authentication**: Smart consultation form that skips login step for authenticated users
 
 ## Legacy Mobile Application
 - **Status**: Maintained separately in `mobile/` directory
