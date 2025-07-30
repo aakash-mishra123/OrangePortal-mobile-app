@@ -208,7 +208,7 @@ export default function InteractiveStepperForm({
                 {...step1Form.register("name")}
                 className="h-12 border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-all duration-300 hover:border-blue-300"
               />
-              {step1Form.formState.errors.name && (
+              {step1Form.formState.errors.name && step1Form.formState.isSubmitted && (
                 <p className="text-red-500 text-sm animate-in slide-in-from-left-2">{step1Form.formState.errors.name.message}</p>
               )}
             </div>
@@ -225,7 +225,7 @@ export default function InteractiveStepperForm({
                 {...step1Form.register("email")}
                 className="h-12 border-2 border-gray-200 rounded-xl focus:border-green-500 transition-all duration-300 hover:border-green-300"
               />
-              {step1Form.formState.errors.email && (
+              {step1Form.formState.errors.email && step1Form.formState.isSubmitted && (
                 <p className="text-red-500 text-sm animate-in slide-in-from-left-2">{step1Form.formState.errors.email.message}</p>
               )}
             </div>
@@ -241,7 +241,7 @@ export default function InteractiveStepperForm({
                 {...step1Form.register("phone")}
                 className="h-12 border-2 border-gray-200 rounded-xl focus:border-purple-500 transition-all duration-300 hover:border-purple-300"
               />
-              {step1Form.formState.errors.phone && (
+              {step1Form.formState.errors.phone && step1Form.formState.isSubmitted && (
                 <p className="text-red-500 text-sm animate-in slide-in-from-left-2">{step1Form.formState.errors.phone.message}</p>
               )}
             </div>
@@ -287,7 +287,7 @@ export default function InteractiveStepperForm({
               {...step2Form.register("projectDetails")}
               className="border-2 border-gray-200 rounded-xl focus:border-purple-500 transition-all duration-300 hover:border-purple-300 resize-none"
             />
-            {step2Form.formState.errors.projectDetails && (
+            {step2Form.formState.errors.projectDetails && step2Form.formState.isSubmitted && (
               <p className="text-red-500 text-sm animate-in slide-in-from-left-2">{step2Form.formState.errors.projectDetails.message}</p>
             )}
           </div>
@@ -299,7 +299,7 @@ export default function InteractiveStepperForm({
             </Label>
             <Select 
               onValueChange={(value) => step2Form.setValue("experienceLevel", value)}
-              defaultValue={step2Form.watch("experienceLevel")}
+              value={step2Form.watch("experienceLevel")}
             >
               <SelectTrigger className="h-12 border-2 border-gray-200 rounded-xl focus:border-indigo-500 transition-all duration-300 hover:border-indigo-300">
                 <SelectValue placeholder="Select the experience level you need" />
@@ -331,7 +331,7 @@ export default function InteractiveStepperForm({
                 </SelectItem>
               </SelectContent>
             </Select>
-            {step2Form.formState.errors.experienceLevel && (
+            {step2Form.formState.errors.experienceLevel && step2Form.formState.isSubmitted && (
               <p className="text-red-500 text-sm animate-in slide-in-from-left-2">{step2Form.formState.errors.experienceLevel.message}</p>
             )}
           </div>
@@ -382,7 +382,10 @@ export default function InteractiveStepperForm({
                 <Clock className="h-4 w-4 text-blue-500" />
                 <span>Project Duration *</span>
               </Label>
-              <Select onValueChange={(value) => step3Form.setValue("projectDuration", value)}>
+              <Select 
+                onValueChange={(value) => step3Form.setValue("projectDuration", value)}
+                value={step3Form.watch("projectDuration")}
+              >
                 <SelectTrigger className="h-12 border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-all duration-300 hover:border-blue-300">
                   <SelectValue placeholder="Select duration" />
                 </SelectTrigger>
@@ -394,7 +397,7 @@ export default function InteractiveStepperForm({
                   <SelectItem value="6months+">🏛️ 6+ Months</SelectItem>
                 </SelectContent>
               </Select>
-              {step3Form.formState.errors.projectDuration && (
+              {step3Form.formState.errors.projectDuration && step3Form.formState.isSubmitted && (
                 <p className="text-red-500 text-sm animate-in slide-in-from-left-2">{step3Form.formState.errors.projectDuration.message}</p>
               )}
             </div>
@@ -404,7 +407,10 @@ export default function InteractiveStepperForm({
                 <DollarSign className="h-4 w-4 text-green-500" />
                 <span>Budget Range *</span>
               </Label>
-              <Select onValueChange={(value) => step3Form.setValue("budget", value)}>
+              <Select 
+                onValueChange={(value) => step3Form.setValue("budget", value)}
+                value={step3Form.watch("budget")}
+              >
                 <SelectTrigger className="h-12 border-2 border-gray-200 rounded-xl focus:border-green-500 transition-all duration-300 hover:border-green-300">
                   <SelectValue placeholder="Select budget range" />
                 </SelectTrigger>
@@ -416,7 +422,7 @@ export default function InteractiveStepperForm({
                   <SelectItem value="5lakh+">💎 ₹5,00,000+</SelectItem>
                 </SelectContent>
               </Select>
-              {step3Form.formState.errors.budget && (
+              {step3Form.formState.errors.budget && step3Form.formState.isSubmitted && (
                 <p className="text-red-500 text-sm animate-in slide-in-from-left-2">{step3Form.formState.errors.budget.message}</p>
               )}
             </div>
@@ -427,7 +433,10 @@ export default function InteractiveStepperForm({
               <Calendar className="h-4 w-4 text-purple-500" />
               <span>Expected Start Time *</span>
             </Label>
-            <Select onValueChange={(value) => step3Form.setValue("timeFrame", value)}>
+            <Select 
+              onValueChange={(value) => step3Form.setValue("timeFrame", value)}
+              value={step3Form.watch("timeFrame")}
+            >
               <SelectTrigger className="h-12 border-2 border-gray-200 rounded-xl focus:border-purple-500 transition-all duration-300 hover:border-purple-300">
                 <SelectValue placeholder="When would you like to start?" />
               </SelectTrigger>
@@ -439,7 +448,7 @@ export default function InteractiveStepperForm({
                 <SelectItem value="flexible">🤝 Flexible</SelectItem>
               </SelectContent>
             </Select>
-            {step3Form.formState.errors.timeFrame && (
+            {step3Form.formState.errors.timeFrame && step3Form.formState.isSubmitted && (
               <p className="text-red-500 text-sm animate-in slide-in-from-left-2">{step3Form.formState.errors.timeFrame.message}</p>
             )}
           </div>
