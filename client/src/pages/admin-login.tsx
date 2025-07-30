@@ -40,7 +40,8 @@ export default function AdminLogin() {
       
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || "Login failed");
+        console.error('Admin login failed:', error.message || "Login failed");
+        return { error: error.message || "Login failed" };
       }
       
       return response.json();

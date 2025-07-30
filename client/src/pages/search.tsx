@@ -151,7 +151,7 @@ export default function SearchPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Categories</SelectItem>
-                    {categories?.map((category) => (
+                    {Array.isArray(categories) && categories.map((category) => (
                       <SelectItem key={category.id} value={category.id}>
                         {category.name}
                       </SelectItem>
@@ -208,7 +208,7 @@ export default function SearchPage() {
         <div className="mb-6">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold text-om-blue">
-              {filteredServices.length} Services Found
+              {Array.isArray(filteredServices) ? filteredServices.length : 0} Services Found
             </h2>
             
             {/* Active Filters */}
@@ -235,7 +235,7 @@ export default function SearchPage() {
         </div>
 
         {/* Services Grid */}
-        {filteredServices.length === 0 ? (
+        {!Array.isArray(filteredServices) || filteredServices.length === 0 ? (
           <Card>
             <CardContent className="p-12 text-center">
               <div className="text-6xl mb-4">🔍</div>
@@ -255,7 +255,7 @@ export default function SearchPage() {
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredServices.map((service) => (
+            {Array.isArray(filteredServices) && filteredServices.map((service) => (
               <ServiceCard key={service.id} service={service} />
             ))}
           </div>

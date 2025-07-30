@@ -24,15 +24,23 @@ export default function ServiceDetail() {
   const [selectedResource, setSelectedResource] = useState<string | null>(null);
   const [showProjectForm, setShowProjectForm] = useState(false);
 
-  const { data: service, isLoading } = useQuery<Service>({
+  const { data: service, isLoading, error } = useQuery<Service>({
     queryKey: [`/api/service/${slug}`],
     queryFn: async () => {
-      const response = await fetch(`/api/service/${slug}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch service');
+      try {
+        const response = await fetch(`/api/service/${slug}`);
+        if (!response.ok) {
+          console.error(`Service fetch failed: ${response.status}`);
+          return null;
+        }
+        return response.json();
+      } catch (err) {
+        console.error('Service fetch error:', err);
+        return null;
       }
-      return response.json();
-    }
+    },
+    retry: 1,
+    staleTime: 300000 // 5 minutes
   });
 
   // Track service view activity

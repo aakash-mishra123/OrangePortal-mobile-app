@@ -14,15 +14,23 @@ export default function Category() {
     enabled: false, // We'll get this from services query for now
   });
 
-  const { data: services, isLoading } = useQuery<Service[]>({
+  const { data: services, isLoading, error } = useQuery<Service[]>({
     queryKey: ["/api/services", { category: slug }],
     queryFn: async () => {
-      const response = await fetch(`/api/services?category=${slug}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch services');
+      try {
+        const response = await fetch(`/api/services?category=${slug}`);
+        if (!response.ok) {
+          console.error(`Services fetch failed: ${response.status}`);
+          return [];
+        }
+        return response.json();
+      } catch (err) {
+        console.error('Services fetch error:', err);
+        return [];
       }
-      return response.json();
-    }
+    },
+    retry: 1,
+    staleTime: 300000 // 5 minutes
   });
 
   // Get category info from first service

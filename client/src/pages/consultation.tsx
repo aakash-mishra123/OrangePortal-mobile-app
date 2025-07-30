@@ -107,12 +107,12 @@ export default function Consultation() {
       setStep(3);
     },
     onError: (error) => {
+      console.error("Failed to book consultation:", error);
       toast({
-        title: "Error",
-        description: "Failed to book consultation. Please try again.",
+        title: "Booking Issue",
+        description: "Unable to book consultation right now. Please try again later.",
         variant: "destructive",
       });
-      console.error("Failed to book consultation:", error);
     },
   });
 
