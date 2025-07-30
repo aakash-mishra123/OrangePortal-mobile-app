@@ -1,19 +1,28 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRoute } from "wouter";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { type Service } from "@shared/schema";
 import { Link } from "wouter";
-import { ChevronRight, Home, Check, ArrowLeft } from "lucide-react";
+import { ChevronRight, Home, ArrowLeft, Star, Clock, Shield, Trophy, Users, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import { trackUserActivity } from "@/lib/activityTracker";
-import KickstartButton from "@/components/ui/kickstart-button";
-import SimilarServices from "@/components/ui/similar-services";
+import AchievementCards from "@/components/ui/achievement-cards";
+import ResourceSelector from "@/components/ui/resource-selector";
+import ProjectDetailsForm from "@/components/ui/project-details-form";
+import { resourceTypes } from "@/components/ui/resource-selector";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function ServiceDetail() {
   const [, params] = useRoute("/service/:slug");
   const slug = params?.slug;
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  
+  const [selectedResource, setSelectedResource] = useState<string | null>(null);
+  const [showProjectForm, setShowProjectForm] = useState(false);
 
   const { data: service, isLoading } = useQuery<Service>({
     queryKey: [`/api/service/${slug}`],
@@ -41,9 +50,53 @@ export default function ServiceDetail() {
     }
   }, [service]);
 
+  const leadMutation = useMutation({
+    mutationFn: async (leadData: any) => {
+      return await apiRequest("/api/leads", "POST", leadData);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Project Kickstarted! 🚀",
+        description: "Your request has been submitted. Our expert will call you within 5 minutes!",
+        duration: 5000,
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/leads"] });
+      setSelectedResource(null);
+      setShowProjectForm(false);
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Submission Failed",
+        description: error.message || "Failed to submit your request. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+
+  const handleResourceSelect = (resourceId: string) => {
+    setSelectedResource(resourceId);
+    setShowProjectForm(true);
+  };
+
+  const handleProjectSubmit = (projectData: any) => {
+    if (!service || !selectedResource) return;
+
+    const selectedResourceData = resourceTypes.find(r => r.id === selectedResource);
+    if (!selectedResourceData) return;
+
+    const leadData = {
+      serviceId: service.id,
+      serviceName: service.title,
+      resourceType: selectedResourceData.title,
+      ...projectData
+    };
+
+    leadMutation.mutate(leadData);
+  };
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-om-gray-50">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse">
             <div className="h-4 bg-gray-300 rounded w-96 mb-8"></div>
@@ -81,131 +134,146 @@ export default function ServiceDetail() {
 
   if (!service) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center py-20 animate-in fade-in duration-500">
-            <div className="mb-8">
-              <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto flex items-center justify-center mb-4">
-                <span className="text-4xl">❓</span>
-              </div>
-            </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">Service Not Found</h1>
-            <p className="text-gray-600 mb-8 text-lg">The requested service could not be found.</p>
-            <Button asChild className="bg-orange-500 hover:bg-orange-600 text-white">
-              <Link href="/home">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Home
-              </Link>
-            </Button>
-          </div>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Service Not Found</h1>
+          <p className="text-gray-600 mb-6">The service you're looking for doesn't exist.</p>
+          <Button asChild>
+            <Link href="/">
+              <Home className="h-4 w-4 mr-2" />
+              Go Home
+            </Link>
+          </Button>
         </div>
       </div>
     );
   }
 
-  const categoryName = service.categoryId.split('-').map(word => 
-    word.charAt(0).toUpperCase() + word.slice(1)
-  ).join(' ');
+  const selectedResourceData = selectedResource ? resourceTypes.find(r => r.id === selectedResource) : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
-        <nav className="mb-8 animate-in slide-in-from-top-4 duration-300">
-          <ol className="flex items-center space-x-2 text-sm">
-            <li>
-              <Link href="/home" className="text-gray-500 hover:text-orange-500 flex items-center transition-colors duration-200">
-                <Home className="h-4 w-4" />
-              </Link>
-            </li>
-            <li>
-              <ChevronRight className="h-4 w-4 text-gray-400" />
-            </li>
-            <li>
-              <Link 
-                href={`/category/${service.categoryId}`}
-                className="text-gray-500 hover:text-orange-500 transition-colors duration-200"
-              >
-                {categoryName}
-              </Link>
-            </li>
-            <li>
-              <ChevronRight className="h-4 w-4 text-gray-400" />
-            </li>
-            <li className="text-blue-600 font-medium">{service.title}</li>
-          </ol>
+        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8 animate-in slide-in-from-left-4 duration-500">
+          <Link href="/" className="hover:text-blue-600 transition-colors">
+            <Home className="h-4 w-4" />
+          </Link>
+          <ChevronRight className="h-4 w-4" />
+          <Link href={`/category/${service.categoryId}`} className="hover:text-blue-600 transition-colors">
+            Category
+          </Link>
+          <ChevronRight className="h-4 w-4" />
+          <span className="text-gray-800 font-medium">{service.title}</span>
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Service Details */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl p-8 shadow-sm">
-              <img 
-                src={service.imageUrl} 
-                alt={service.title}
-                className="w-full h-64 object-cover rounded-lg mb-6"
-              />
-              
-              <h1 className="text-3xl font-bold text-om-blue mb-4">{service.title}</h1>
-              
-              <div className="flex items-center space-x-4 mb-6">
-                <span className="text-2xl font-bold text-om-orange">
-                  ₹{service.hourlyRate.toLocaleString()}/hour
-                </span>
-                <span className="text-lg text-om-gray-500">
-                  or ₹{service.monthlyRate.toLocaleString()}/month
-                </span>
-              </div>
-
-              <div className="prose max-w-none mb-8">
-                <p className="text-lg text-om-gray-600 mb-4">
-                  {service.description}
-                </p>
-                
-                <p className="text-om-gray-600 mb-6">
-                  {service.longDescription}
-                </p>
-              </div>
-
-              {/* Key Features */}
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold text-om-blue mb-4">Key Features</h3>
-                <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {service.features.map((feature, index) => (
-                    <li key={index} className="flex items-center space-x-2">
-                      <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Technologies Used */}
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold text-om-blue mb-4">Technologies Used</h3>
-                <div className="flex flex-wrap gap-2">
-                  {service.technologies.map((tech, index) => (
-                    <Badge key={index} variant="secondary" className="text-sm">
-                      {tech}
-                    </Badge>
-                  ))}
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Service Header */}
+            <Card className="animate-in slide-in-from-left-6 duration-700">
+              <CardContent className="p-8">
+                <div className="mb-6">
+                  <img 
+                    src={service.imageUrl} 
+                    alt={service.title}
+                    className="w-full h-64 object-cover rounded-lg shadow-md"
+                  />
                 </div>
-              </div>
-            </div>
+                <div className="flex items-center justify-between mb-4">
+                  <h1 className="text-3xl font-bold text-gray-800">{service.title}</h1>
+                  <Badge className="bg-green-100 text-green-800 text-lg px-4 py-2">
+                    Starting at ₹{service.hourlyRate}/hour
+                  </Badge>
+                </div>
+                <p className="text-gray-600 text-lg mb-6">{service.description}</p>
+                
+                {/* Achievement Cards */}
+                <AchievementCards />
+
+                {/* Detailed Description */}
+                <div className="prose max-w-none">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-4">About This Service</h3>
+                  <p className="text-gray-600 leading-relaxed mb-6">{service.longDescription}</p>
+                </div>
+
+                {/* Features */}
+                <div className="mb-6">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-4">What's Included</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {service.features.map((feature, index) => (
+                      <div key={index} className="flex items-center space-x-3">
+                        <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center">
+                          <span className="text-green-600 text-xs">✓</span>
+                        </div>
+                        <span className="text-gray-700">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Technologies */}
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-4">Technologies We Use</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {service.technologies.map((tech, index) => (
+                      <Badge key={index} variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                        {tech}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
-          {/* Kickstart Button */}
+          {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24 space-y-6">
-              <KickstartButton service={service} />
-              
-              {/* Similar Services */}
-              <Card className="shadow-lg animate-in slide-in-from-right-6 duration-700">
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold text-blue-800 mb-4">Similar Services</h3>
-                  <SimilarServices currentServiceId={service.id} categoryId={service.categoryId} />
-                </CardContent>
-              </Card>
+            <div className="sticky top-8 space-y-6">
+              {!showProjectForm ? (
+                /* Resource Selection */
+                <Card className="animate-in slide-in-from-right-6 duration-700">
+                  <CardHeader>
+                    <CardTitle className="text-xl font-semibold text-gray-800">Get Started</CardTitle>
+                    <p className="text-gray-600">Select the type of resource you need for your project</p>
+                  </CardHeader>
+                  <CardContent>
+                    <ResourceSelector 
+                      selectedResource={selectedResource}
+                      onResourceSelect={handleResourceSelect}
+                    />
+                  </CardContent>
+                </Card>
+              ) : (
+                /* Project Details Form */
+                <div className="animate-in slide-in-from-right-6 duration-500">
+                  <div className="mb-4">
+                    <Button 
+                      variant="ghost" 
+                      onClick={() => {
+                        setShowProjectForm(false);
+                        setSelectedResource(null);
+                      }}
+                      className="text-gray-600 hover:text-gray-800"
+                    >
+                      <ArrowLeft className="h-4 w-4 mr-2" />
+                      Back to Resource Selection
+                    </Button>
+                  </div>
+                  
+                  {selectedResourceData && (
+                    <ProjectDetailsForm
+                      serviceId={service.id}
+                      serviceName={service.title}
+                      resourceType={selectedResource!}
+                      resourceTitle={selectedResourceData.title}
+                      hourlyRate={selectedResourceData.hourlyRate}
+                      onSubmit={handleProjectSubmit}
+                      isSubmitting={leadMutation.isPending}
+                    />
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

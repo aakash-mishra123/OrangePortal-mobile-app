@@ -222,8 +222,9 @@ export default function AdminDashboard() {
                   <TableRow className="bg-gray-50/50">
                     <TableHead className="font-semibold">Date & Time</TableHead>
                     <TableHead className="font-semibold">Customer</TableHead>
-                    <TableHead className="font-semibold">Service</TableHead>
-                    <TableHead className="font-semibold">Contact</TableHead>
+                    <TableHead className="font-semibold">Service & Resource</TableHead>
+                    <TableHead className="font-semibold">Project Details</TableHead>
+                    <TableHead className="font-semibold">Budget & Timeline</TableHead>
                     <TableHead className="font-semibold">Status</TableHead>
                     <TableHead className="font-semibold">Actions</TableHead>
                   </TableRow>
@@ -231,7 +232,7 @@ export default function AdminDashboard() {
                 <TableBody>
                   {filteredLeads.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                      <TableCell colSpan={7} className="text-center py-8 text-gray-500">
                         {searchTerm ? 'No leads match your search.' : 'No kickstart requests yet.'}
                       </TableCell>
                     </TableRow>
@@ -255,20 +256,58 @@ export default function AdminDashboard() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Badge variant="outline" className="font-medium">
-                            {lead.serviceName}
-                          </Badge>
+                          <div className="space-y-2">
+                            <Badge variant="outline" className="font-medium">
+                              {lead.serviceName}
+                            </Badge>
+                            {lead.resourceType && (
+                              <div className="text-sm text-gray-600">
+                                <span className="font-medium">Resource:</span> {lead.resourceType}
+                              </div>
+                            )}
+                            {lead.experienceLevel && (
+                              <div className="text-sm text-gray-600">
+                                <span className="font-medium">Level:</span> {lead.experienceLevel}
+                              </div>
+                            )}
+                          </div>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="max-w-xs">
                           <div className="space-y-1">
-                            <div className="flex items-center space-x-2 text-sm">
+                            {lead.projectDetails && (
+                              <div className="text-sm text-gray-700 truncate" title={lead.projectDetails}>
+                                {lead.projectDetails.length > 100 
+                                  ? `${lead.projectDetails.substring(0, 100)}...` 
+                                  : lead.projectDetails}
+                              </div>
+                            )}
+                            <div className="flex items-center space-x-2 text-xs text-gray-500">
                               <Mail className="h-3 w-3" />
                               <span>{lead.email}</span>
                             </div>
-                            <div className="flex items-center space-x-2 text-sm">
+                            <div className="flex items-center space-x-2 text-xs text-gray-500">
                               <Phone className="h-3 w-3" />
                               <span>{lead.phone}</span>
                             </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="space-y-1 text-sm">
+                            {lead.budget && (
+                              <div className="text-gray-700">
+                                <span className="font-medium">Budget:</span> {lead.budget}
+                              </div>
+                            )}
+                            {lead.projectDuration && (
+                              <div className="text-gray-600">
+                                <span className="font-medium">Duration:</span> {lead.projectDuration}
+                              </div>
+                            )}
+                            {lead.timeFrame && (
+                              <div className="text-gray-600">
+                                <span className="font-medium">Start:</span> {lead.timeFrame}
+                              </div>
+                            )}
                           </div>
                         </TableCell>
                         <TableCell>

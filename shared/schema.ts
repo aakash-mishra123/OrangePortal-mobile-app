@@ -73,6 +73,12 @@ export const leads = pgTable("leads", {
   phone: text("phone").notNull(),
   serviceId: varchar("service_id").notNull().references(() => services.id),
   serviceName: text("service_name").notNull(),
+  resourceType: text("resource_type"), // Frontend, Backend, Fullstack, UI/UX, QA
+  experienceLevel: text("experience_level"), // Junior, Mid-level, Senior
+  projectDuration: text("project_duration"), // 1-3 months, 3-6 months, etc.
+  budget: text("budget"), // Budget range
+  timeFrame: text("time_frame"), // Expected start date
+  projectDetails: text("project_details"), // Detailed project description
   message: text("message"),
   createdAt: timestamp("created_at").defaultNow(),
 });
