@@ -49,17 +49,24 @@ export default function CategoryCard({ category, onClick }: CategoryCardProps) {
   return (
     <Link href={`/category/${category.slug}`}>
       <div 
-        className="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer group border border-gray-100"
+        className="bg-white/80 backdrop-blur-sm p-4 sm:p-6 rounded-2xl shadow-lg hover:shadow-2xl hover:shadow-blue-100/50 transition-all duration-300 hover:-translate-y-2 cursor-pointer group border border-gray-200/50 hover:border-blue-200"
         onClick={handleClick}
       >
-        <div className={`w-12 h-12 bg-gradient-to-br ${gradient} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-          <span className="text-white text-xl">{icon}</span>
+        <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br ${gradient} rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+          <span className="text-white text-lg sm:text-xl">{icon}</span>
         </div>
-        <h3 className="text-lg font-semibold text-om-blue mb-2">{category.name}</h3>
-        <p className="text-om-gray-500 text-sm mb-3">{category.description}</p>
-        <span className="text-xs text-om-orange font-medium">
-          {category.serviceCount} Services
-        </span>
+        <h3 className="text-base sm:text-lg font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-2 group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
+          {category.name}
+        </h3>
+        <p className="text-gray-600 text-xs sm:text-sm mb-3 line-clamp-2">{category.description}</p>
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-semibold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+            {category.serviceCount} Services
+          </span>
+          <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <span className="text-white text-xs">→</span>
+          </div>
+        </div>
       </div>
     </Link>
   );

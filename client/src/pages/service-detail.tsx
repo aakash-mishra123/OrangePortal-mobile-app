@@ -203,28 +203,28 @@ export default function ServiceDetail() {
           <span className="text-gray-800 font-medium">{service.title}</span>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-12">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-6 lg:space-y-8">
             {/* Service Header */}
             <Card className="interactive-card animate-in slide-in-from-left-6 duration-700 hover-glow border-0 shadow-2xl">
-              <CardContent className="p-8">
-                <div className="mb-6 relative overflow-hidden rounded-xl">
+              <CardContent className="p-4 sm:p-6 lg:p-8">
+                <div className="mb-4 sm:mb-6 relative overflow-hidden rounded-xl">
                   <img 
                     src={service.imageUrl} 
                     alt={service.title}
-                    className="w-full h-64 object-cover rounded-xl shadow-lg transition-transform duration-500 hover:scale-110"
+                    className="w-full h-48 sm:h-56 lg:h-64 object-cover rounded-xl shadow-lg transition-transform duration-500 hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
-                  <div className="absolute top-4 right-4">
-                    <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-gray-800 animate-bounce-slow">
+                  <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
+                    <div className="bg-white/90 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm font-medium text-gray-800 animate-bounce-slow">
                       🔥 Hot Service
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center justify-between mb-4">
-                  <h1 className="text-3xl font-bold text-gray-800">{service.title}</h1>
-                  <Badge className="bg-green-100 text-green-800 text-lg px-4 py-2">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800">{service.title}</h1>
+                  <Badge className="bg-green-100 text-green-800 text-sm sm:text-base lg:text-lg px-3 py-1.5 sm:px-4 sm:py-2 self-start sm:self-auto">
                     Starting at ₹{service.hourlyRate}/hour
                   </Badge>
                 </div>
@@ -271,13 +271,13 @@ export default function ServiceDetail() {
 
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="sticky top-8 space-y-6">
+            <div className="sticky top-4 lg:top-8 space-y-4 lg:space-y-6">
               {!showProjectForm ? (
                 /* Resource Selection */
-                <Card className="animate-in slide-in-from-right-6 duration-700">
-                  <CardHeader>
-                    <CardTitle className="text-xl font-semibold text-gray-800">Get Started</CardTitle>
-                    <p className="text-gray-600">Select the type of resource you need for your project</p>
+                <Card className="animate-in slide-in-from-right-6 duration-700 border-0 shadow-xl">
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Get Started</CardTitle>
+                    <p className="text-sm sm:text-base text-gray-600">Select the type of resource you need for your project</p>
                   </CardHeader>
                   <CardContent>
                     <ResourceSelector 

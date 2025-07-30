@@ -82,8 +82,8 @@ export default function Category() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
         {/* Breadcrumb */}
         <nav className="mb-8">
           <ol className="flex items-center space-x-2 text-sm">
@@ -101,21 +101,21 @@ export default function Category() {
           </ol>
         </nav>
 
-        <div className="mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-om-blue mb-4">
+        <div className="mb-8 sm:mb-12 text-center sm:text-left">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
             {categoryInfo?.name || 'Services'}
           </h1>
-          <p className="text-xl text-om-gray-500 max-w-3xl">
+          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto sm:mx-0">
             {categoryInfo?.description || 'Professional services tailored to your business needs.'}
           </p>
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {services.map((service, index) => (
             <div 
               key={service.id}
-              className="animate-bounce-slow"
+              className="animate-bounce-slow transform transition-all duration-300 hover:scale-105"
               style={{ animationDelay: `${index * 150}ms` }}
             >
               <ServiceCard service={service} />
