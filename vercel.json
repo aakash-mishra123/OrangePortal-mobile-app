@@ -2,14 +2,35 @@
   "version": 2,
   "buildCommand": "npm run build:client",
   "outputDirectory": "client/dist",
-  "routes": [
+  "functions": {
+    "api/simple.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/simple.js"
+      "source": "/api/(.*)",
+      "destination": "/api/simple.js"
+    }
+  ],
+  "headers": [
+    {
+      "src": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
-      "src": "/(.*)",
-      "dest": "/client/dist/$1"
+      "src": "/(.*\\.(css|js|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|ico))",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ]
 }
