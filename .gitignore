@@ -14,3 +14,4 @@ vite.config.ts.*
 .env.development
 .env.test
 .env.example
+.vercel

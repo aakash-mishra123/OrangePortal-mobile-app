@@ -1,7 +1,5 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
-
-// Get API base URL from environment variable or fallback to relative URLs
-const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+import { getApiUrl } from "./config";
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
@@ -15,8 +13,8 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  // Prepend base URL if it's a relative URL
-  const fullUrl = url.startsWith('http') ? url : `${API_BASE_URL}${url}`;
+  // Build the full API URL using our config
+  const fullUrl = getApiUrl(url);
   
   const res = await fetch(fullUrl, {
     method,
@@ -36,9 +34,7 @@ export const getQueryFn: <T>(options: {
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
     const url = queryKey.join("/") as string;
-    const fullUrl = url.startsWith('http') ? url : `${API_BASE_URL}${url}`;
-    
-    const res = await fetch(fullUrl, {
+    const res = await fetch(url, {
       credentials: "include",
     });
 

@@ -20,7 +20,6 @@ import { db } from "./db";
 import { eq, desc, and } from "drizzle-orm";
 
 export interface IStorage {
-  // Categories
   getCategories(): Promise<Category[]>;
   getCategoryBySlug(slug: string): Promise<Category | undefined>;
   
